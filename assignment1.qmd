@@ -1,0 +1,11 @@
+---
+title: "Assignment 1: Recommender Systems"
+author: "Jessica Stow (STWJES003@MYUCT.AC.ZA)"
+date: "September 2024"
+format: 
+  html: 
+    fig-width: 8
+    fig-height: 4
+    code-fold: true
+---
+
