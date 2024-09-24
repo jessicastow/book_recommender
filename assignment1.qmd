@@ -133,11 +133,11 @@ library(keras)
 library(recosystem)
 ```
 
-There were no duplicate entries found in any of the datasets. 
+There were no duplicate entries found in any of the datasets.
 
-The `Books` dataset contains information for 271 360 books, with all of these books being unique based on their ISBN. 
+The `Books` dataset contains information for 271 360 books, with all of these books being unique based on their ISBN.
 
-The `Users` dataset contains information for 278 858 users, with all of these users being unique based on their user IDs. 
+The `Users` dataset contains information for 278 858 users, with all of these users being unique based on their user IDs.
 
 The `Ratings` dataset contains information for 1 149 780 ratings. For this dataset we found that 105 283 unique users gave ratings (both explicit and implicit), this accounts for approximately 38% of the total user base. Interestingly, these users rated 340 556 books, which exceeds the number of books listed in the `Books` dataset.
 
@@ -164,7 +164,7 @@ sum(duplicated(users)) # no duplicates as expected
 
 
 # RATINGS ----------------------------------------------------------------------
-# how many ratings
+# how many ratings?
 nrow(ratings) # 1 149 780 ratings
 sum(duplicated(ratings)) # no duplicates
 # how many users gave ratings?
@@ -179,24 +179,23 @@ length(unique(ratings$ISBN)) # 340 556
 
 ## Univariate analysis
 
-We decided to investigate the following variables:
-- user age
+We decided to investigate the following variables: user age and book ratings.
 
-We opted to not investigate the user location due to the fact that this was not useful for the purpose of this recommender exercise. 
+We chose not to explore user location or additional book details, as they were not relevant to the objectives of this recommender system exercise.
 
-### User Age 
+### User Age
 
-The user age ranged from 0 to 244 year, with a mean age of 35 years old and median age of 32 years. This is highly problematic since it is impossible for users of age 0 to be reading, and impossible for users to be as old as 244. These outliers are likely to exist due to an error in the data capturing process. When we ignore the strong presence of the high age outliers we can see that the age range is more or less symmetrical and uniform in distribution. 
+User ages ranged from 0 to 244 years, with a mean of 35 and a median of 32. This range presents significant issues, as it's unrealistic for users to be 0 or 244 years old. These outliers likely result from data entry errors. Excluding these extreme values reveals that the age distribution is generally symmetrical and uniform.
 
 ```{r include=TRUE}
 # USERS -----------------------------------------------------------------------
-# what is the spread of user ages
+# what is the spread of user ages?
 min(users$Age, na.rm = TRUE) # minimum age = 0 
 mean(users$Age, na.rm = TRUE) # mean age 35 years
 median(users$Age, na.rm = TRUE) # 32 
 max(users$Age, na.rm = TRUE) # max age 244
 
-# Visualize the range of 'Age' using a boxplot
+# Visualise the range of 'Age' using a boxplot
 boxplot(users$Age, 
         main = "Figure 1: Boxplot of User Age", 
         ylab = "Age", 
@@ -207,17 +206,17 @@ boxplot(users$Age,
 
 ### Book ratings
 
-The book ratings ranged from 0 to 10. Ratings of 0 implied that these ratings were implicit, in other words the user might have read or interacted with the book, but they did not explicitly rate the book. Ratings from 1-10 implied that these ratings were explicit, so the user themself rated these books. We can see from _Figure 2_ below that the majority of the ratings were implicit, which will not be useful in our recommender system later. 
+Book ratings ranged from 0 to 10. A rating of 0 indicated an implicit interaction, meaning the user may have read or interacted with the book but did not explicitly rate it. Ratings from 1 to 10 were explicit, representing direct user input. As shown in *Figure 2* below, the majority of ratings were implicit, which will be less useful for our recommender system moving forward.
 
 ```{r include=TRUE}
 # RATINGS -----------------------------------------------------------------------
-# what is the spread of the ratings variable
+# what is the spread of the ratings variable?
 min(ratings$Book.Rating, na.rm = TRUE) # minimum rating = 0 
 mean(ratings$Book.Rating, na.rm = TRUE) # mean age 35 years
 median(ratings$Book.Rating, na.rm = TRUE) # 32 
 max(ratings$Book.Rating, na.rm = TRUE) # max rating = 10
 
-# Visualize the range of 'rating' using a histogram
+# Visualise the range of 'rating' using a histogram
 hist(ratings$Book.Rating, 
      breaks = 11, 
      main = "Figure 2: Distribution of Book rating", 
@@ -232,14 +231,64 @@ axis(1, at = 0:10, labels = 0:10)
 
 ## Bivariate analysis
 
-### Ratings by users
+### Ratings by user
+
+We observed that one user (ID 11676) rated an impressive 13 607 books, which is significantly higher than the average of just 10 book ratings per user. When we investigated this user we noted that there is no location or age information available for them
 
 ```{r}
-# which users rated the most books
+# which users rated the most books?
 
-# which books got the most ratings
+# Group by User ID and count the number of ratings
+user_ratings_count <- ratings %>%
+  group_by(User.ID) %>%
+  summarise(rating_count = n()) %>%
+  arrange(desc(rating_count))
 
-# which books got the highest ratings
+# View the top user who rated the most books
+head(user_ratings_count, 1)
+
+# investigate this user
+users[users$User.ID == '11676', ]
+
+# average ratings per user
+mean(user_ratings_count$rating_count)
+```
+
+### Ratings by book 
+
+The most rated book was "Wild Animus" by Rich Shapero, published in 2004, which received a total of 2502 ratings.
+
+```{r}
+# which book got the most ratings?
+
+# Group by ISBN and count the number of ratings for each book
+book_ratings_count <- ratings %>%
+  group_by(ISBN) %>%
+  summarise(rating_count = n()) %>%
+  arrange(desc(rating_count))
+
+# View the book that received the most ratings
+head(book_ratings_count, 1)
+
+# which book was this?
+books[books$ISBN == '0971880107', ]
+```
+
+Several books had an average rating of 10, though in many cases these ratings were based on input from only a single user.
+
+```{r}
+# which book got the highest rating?
+
+# Group by ISBN and calculate the mean rating for each book
+book_avg_ratings <- ratings %>%
+  group_by(ISBN) %>%
+  summarise(average_rating = mean(Book.Rating, na.rm = TRUE), 
+            rating_count = n()) %>%
+  arrange(desc(average_rating))
+
+# View the top 10 books with the highest average ratings
+head(book_avg_ratings, 10)
+
 ```
 
 # Methods
@@ -248,7 +297,7 @@ axis(1, at = 0:10, labels = 0:10)
 
 ### Ratings
 
-We decided to drop the implicit ratings (ratings equal to 0) as these are not useful in the building of our recommender model. We also chose to only keep books with 5 or more ratings to ensure we had enough information to feed our model. This resulted in a ratings data frame with 199 477 rows, meaning 950 303 observations (~83% of our ratings data) was dropped. 
+We decided to drop the implicit ratings (ratings equal to 0) as these are not useful in the building of our recommender model. We also chose to only keep books with 5 or more ratings to ensure we had enough information to feed our model. This resulted in a ratings data frame with 199 477 rows, meaning 950 303 observations (\~83% of our ratings data) was dropped.
 
 ```{r}
 ratings <- ratings %>%
@@ -260,23 +309,21 @@ ratings <- ratings %>%
 nrow(ratings) # 199 477 rows, therefore 950 303 rows (83% of the data) dropped
 ```
 
-### Users 
+### Users
 
-We decided to only investigate the user preferences of young adults between the ages of 18 and 25 (inclusive). All other ages were dropped from the data frame. 
+We decided to only investigate the user preferences of young adults between the ages of 18 and 25 (inclusive). All other ages were dropped from the data frame. We also decided to exclude the user location information as this was not helpful to our recommender model building.
 
 ```{r}
 users <- users %>%
-  filter(Age >= 18 & Age <= 25) # only keep users between 18 and 25 years old
-
- 
+  filter(Age >= 18 & Age <= 25) %>% # only keep users between 18 and 25 years old
+  select(-Location)
 ```
-
 
 ### Books
 
 We ensured that all books had a title. We then investigated the instances where the Year of Publication contained non-numeric values, as this would prevent converting the column to an integer. We found that for three books, the Book Author and Year of Publication fields had been mistakenly swapped. To address this, we implemented a solution to correct the swapped information. We then turned the year of publication column into a type integer.
 
-We kept the ISBN, book title, author and year of publication information and dropped the publisher and image URLs from the `books` data frame. 
+We kept the ISBN, book title, author and year of publication information and dropped the publisher and image URLs from the `books` data frame.
 
 ```{r}
 sum(is.na(books$Book.Title)) # all books have a title
@@ -288,13 +335,14 @@ non_numeric_year <- books[is.na(as.numeric(as.character(books$Year.Of.Publicatio
 books$Year.Of.Publication[is.na(as.numeric(as.character(books$Year.Of.Publication)))] <- non_numeric_year$Book.Author
 books$Book.Author[is.na(as.numeric(as.character(books$Year.Of.Publication)))] <- non_numeric_year$Year.Of.Publication
 
+colnames(books)
 books <- books %>%  
   mutate(Year.Of.Publication = as.integer(Year.Of.Publication)) %>% # make year of publication an integer
   select(c(ISBN, Book.Title, Book.Author, Year.Of.Publication, # keep these variables
-           -Publisher, -Image.URL.s, -Image.URL.M, Image.URL.L)) # drop these variables
+           -Publisher, -Image.URL.S, -Image.URL.M, -Image.URL.L)) # drop these variables
 ```
 
-### Joining of books to ratings dataframe
+### Joining of data frames
 
 The `Books` data frame was merged with the `Ratings` data frame using a left join on the common variable`ISBN`. This ensured that all the ratings information was retained while adding the corresponding book titles and authors to the data set.
 
@@ -309,9 +357,35 @@ ratings_books <- ratings %>%
 sum(is.na(ratings_books$Book.Title)) # 7249 ratings without book info
 
 # Remove rows where Book.Title is NA
-ratings_books <- ratings %>% 
+ratings_books <- ratings_books %>% 
   filter(!is.na(Book.Title))
+```
 
+We then merged the user information into the new data frame using a left join, matching on the shared user IDs. The left join was chosen to ensure that all data related to the books and their ratings remained intact. We then noted that we now had 172 235 ratings without age information which had to be dropped.
+
+```{r}
+ratings_books_users <- ratings_books %>%
+  left_join(users, by = "User.ID")
+
+sum(is.na(ratings_books_users$Age)) # 172235 ratings without age info
+
+# Remove rows where Age is NA
+ratings_books_users <- ratings_books_users %>% 
+  filter(!is.na(Age))
+```
+
+The final merged data frame contained the following variables: the book's ISBN, title, author, year of publication, the user's rating, and their age. It comprised 19 993 ratings, and the first 50 can be viewed by exploring the data table below.
+
+```{r}
+colnames(ratings_books_users)
+```
+
+```{r include=TRUE}
+datatable(
+  head(ratings_books_users, 50), 
+  rownames = FALSE,
+  options = list(dom = "tip", pageLength = 5)
+)
 ```
 
 ## 
@@ -322,7 +396,6 @@ ratings_books_users <- ratings_books %>%
   mutate(User.ID = as.factor(User.ID)) %>%
   mutate(Book.Title = as.factor(Book.Title))
 ```
-
 
 ## User-Based Collaborative Filtering
 
