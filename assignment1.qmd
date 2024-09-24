@@ -44,3 +44,8 @@ a\) Assess the accuracy of the matrix factorisation recommender system, using a 
 b\) Assess the accuracy of the matrix factorisation recommender system with and without regularisation.
 
 c\) Create a final model that ensembles the predictions from the three approaches, and then assess the accuracy of the ensemble predictions.
+
+## Introduction to Data Mining and Recommender Systems 
+
+Recommender systems utilise data mining techniques to offer personalised suggestions by analysing patterns in user preferences and behaviours (Data Mining: Concepts and Techniques, 2012). The collaborative filtering approach specifically focuses on identifying users with similar tastes or preferences, recommending items based on the opinions and actions of those with shared interests. This method may also take into account a user’s social environment to enhance the relevance of the recommendations.
+
