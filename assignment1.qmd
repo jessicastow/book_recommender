@@ -37,8 +37,10 @@ b\) user-based collaborative filtering, and
 
 c\) matrix factorisation.
 
-2.  a\) Assess the accuracy of the matrix factorisation recommender system, using a single train/test sample.
+2\. Assessment and ensemble model:
 
-    b\) Assess the accuracy of the matrix factorisation recommender system with and without regularisation.
+a\) Assess the accuracy of the matrix factorisation recommender system, using a single train/test sample.
 
-    c\) Create a final model that ensembles the predictions from the three approaches, and then assess the accuracy of the ensemble predictions.
+b\) Assess the accuracy of the matrix factorisation recommender system with and without regularisation.
+
+c\) Create a final model that ensembles the predictions from the three approaches, and then assess the accuracy of the ensemble predictions.
