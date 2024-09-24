@@ -260,7 +260,7 @@ ratings <- ratings %>%
 nrow(ratings) # 199 477 rows, therefore 950 303 rows (83% of the data) dropped
 ```
 
-## Users 
+### Users 
 
 We decided to only investigate the user preferences of young adults between the ages of 18 and 25 (inclusive). All other ages were dropped from the data frame. 
 
@@ -274,17 +274,27 @@ users <- users %>%
 
 ### Books
 
-We ensured that all books had a title. We kept the ISBN, book title, author and year of publication information and dropped the publisher and image URLs. 
+We ensured that all books had a title. We then investigated the instances where the Year of Publication contained non-numeric values, as this would prevent converting the column to an integer. We found that for three books, the Book Author and Year of Publication fields had been mistakenly swapped. To address this, we implemented a solution to correct the swapped information. We then turned the year of publication column into a type integer.
+
+We kept the ISBN, book title, author and year of publication information and dropped the publisher and image URLs from the `books` data frame. 
 
 ```{r}
 sum(is.na(books$Book.Title)) # all books have a title
 
+# identify the cases where the year is not numeric
+non_numeric_year <- books[is.na(as.numeric(as.character(books$Year.Of.Publication))), ]
+
+# Swap the 'Book.Author' and 'Year.Of.Publication' values for these rows
+books$Year.Of.Publication[is.na(as.numeric(as.character(books$Year.Of.Publication)))] <- non_numeric_year$Book.Author
+books$Book.Author[is.na(as.numeric(as.character(books$Year.Of.Publication)))] <- non_numeric_year$Year.Of.Publication
+
 books <- books %>%  
+  mutate(Year.Of.Publication = as.integer(Year.Of.Publication)) %>% # make year of publication an integer
   select(c(ISBN, Book.Title, Book.Author, Year.Of.Publication, # keep these variables
            -Publisher, -Image.URL.s, -Image.URL.M, Image.URL.L)) # drop these variables
 ```
 
-## Joining of books to ratings dataframe
+### Joining of books to ratings dataframe
 
 The `Books` data frame was merged with the `Ratings` data frame using a left join on the common variable`ISBN`. This ensured that all the ratings information was retained while adding the corresponding book titles and authors to the data set.
 
