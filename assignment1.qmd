@@ -63,7 +63,7 @@ Cosine similarity ranges from 0 to 1, with higher values indicating greater simi
 
 User-Based Collaborative Filtering accounts for a user's interests by identifying similar users and recommending items that those users have shown interest in (Grus, 2015).
 
-To get an idea of how similar two users are we need to use the *cosine similarity* metric, which quantifies how alike any two users are based on their preference vectors.
+To get an idea of how similar two users are we need to use the cosine similarity metric, which quantifies how alike any two users are based on their preference vectors.
 
 ## Item-Based Collaborative Filtering
 
