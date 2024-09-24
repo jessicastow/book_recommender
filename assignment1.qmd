@@ -131,6 +131,8 @@ library(ggplot2)
 library(DT)
 library(keras)
 library(recosystem)
+library(Matrix)
+library(proxyC)
 ```
 
 There were no duplicate entries found in any of the datasets.
@@ -297,7 +299,7 @@ head(book_avg_ratings, 10)
 
 ### Ratings
 
-We decided to drop the implicit ratings (ratings equal to 0) as these are not useful in the building of our recommender model. We also chose to only keep books with 5 or more ratings to ensure we had enough information to feed our model. This resulted in a ratings data frame with 199 477 rows, meaning 950 303 observations (\~83% of our ratings data) was dropped.
+We decided to drop the implicit ratings (ratings equal to 0) as these are not useful in the building of our recommender model. We also chose to only keep books with 5 or more ratings to ensure we had enough information to feed our model.
 
 ```{r}
 ratings <- ratings %>%
@@ -308,6 +310,16 @@ ratings <- ratings %>%
 
 nrow(ratings) # 199 477 rows, therefore 950 303 rows (83% of the data) dropped
 ```
+I also chose to retain user ratings only for those who had rated 10 or more books (i.e., users who rated at least the average number of books). This approach ensures that we focus on active readers, providing a more reliable understanding of their preferences. These filtering methods resulted in a ratings data frame with 111 008 rows, meaning 1 038 772 observations (\~90% of our ratings data) was dropped.
+
+```{r}
+# only keep ratings when users have rated 10 or more books
+ratings <- ratings %>%
+  group_by(User.ID) %>%
+  filter(n() >= 10) %>%
+  ungroup()
+```
+
 
 ### Users
 
@@ -361,22 +373,23 @@ ratings_books <- ratings_books %>%
   filter(!is.na(Book.Title))
 ```
 
-We then merged the user information into the new data frame using a left join, matching on the shared user IDs. The left join was chosen to ensure that all data related to the books and their ratings remained intact. We then noted that we now had 172 235 ratings without age information which had to be dropped.
+We then merged the user information into the new data frame using a left join, matching on the shared user IDs. The left join was chosen to ensure that all data related to the books and their ratings remained intact. We then noted that we now had 97 202 ratings without age information which had to be dropped.
 
 ```{r}
 ratings_books_users <- ratings_books %>%
   left_join(users, by = "User.ID")
 
-sum(is.na(ratings_books_users$Age)) # 172235 ratings without age info
+sum(is.na(ratings_books_users$Age)) # 97202 ratings without age info
 
 # Remove rows where Age is NA
 ratings_books_users <- ratings_books_users %>% 
   filter(!is.na(Age))
 ```
 
-The final merged data frame contained the following variables: the book's ISBN, title, author, year of publication, the user's rating, and their age. It comprised 19 993 ratings, and the first 50 can be viewed by exploring the data table below.
+The final merged data frame contained the following variables: the book's ISBN, title, author, year of publication, the user's rating, and their age. It comprised 10 768 ratings, and the first 50 can be viewed by exploring the data table below.
 
 ```{r}
+nrow(ratings_books_users) # 10768
 colnames(ratings_books_users)
 ```
 
@@ -388,20 +401,181 @@ datatable(
 )
 ```
 
-## 
+## Cosine similarity
+
+We created a function that will calculate cosine similarity. 
 
 ```{r}
-ratings_books_users <- ratings_books %>%
-  inner_join(users, by = "User.ID") %>%
-  mutate(User.ID = as.factor(User.ID)) %>%
-  mutate(Book.Title = as.factor(Book.Title))
+# function for calculating cosine similarity
+cosine_sim <- function(a, b) {
+  crossprod(a, b) / sqrt(crossprod(a) * crossprod(b))
+}
 ```
 
 ## User-Based Collaborative Filtering
 
+```{r}
+ratings_wide <- ratings_books_users %>%
+  select(User.ID, ISBN, Book.Rating) %>%
+  complete(User.ID, ISBN) %>%
+  pivot_wider(names_from = ISBN, values_from = Book.Rating)
+
+ratings_matrix <- as.matrix(t(ratings_wide))
+
+# Replace NAs with 0, as cosine similarity doesn't handle NAs directly
+ratings_matrix[is.na(ratings_matrix)] <- 0
+
+# Convert the matrix to a sparse matrix
+ratings_matrix_sparse <- Matrix(ratings_matrix, sparse = TRUE)
+
+# Assuming ratings_matrix_sparse is a sparse matrix (of class dgCMatrix)
+
+# Compute cosine similarity using proxyC
+user_similarities <- simil(ratings_matrix_sparse, method = "cosine")
+
+# This should be faster than using a dense matrix
+
+# Convert the result to a dense matrix if needed
+user_similarities <- as.matrix(user_similarities)
+
+# Add row and column names for easy identification of users
+row.names(user_similarities) <- row.names(ratings_matrix)
+colnames(user_similarities) <- row.names(ratings_matrix)
+
+# View the first few rows and columns
+user_similarities[1:5, 1:5]
+```
+### Predictions
+
+```{r}
+######## SMALL SCALE
+ratings_wide[, "0451524934"]
+!is.na(ratings_wide[, "0451524934"])
+
+user <- "254"
+isbn <- "0451524934"
+
+stdW <- user_similarities[user, ] * !is.na(ratings_wide[, isbn])
+stdW <- stdW / sum(stdW)
+stdW
+
+ub_rating <- sum(ratings_wide[, isbn] * stdW, na.rm = TRUE) # predicted rating 
+ub_rating
+
+###########################
+# BIG SCALE 
+
+# Define a function to calculate the user-based predicted rating
+ub_predict_rating <- function(user_id, isbn, ratings_wide, user_similarities) {
+  # Get the similarities for the current user
+  stdW <- user_similarities[user_id, ] * !is.na(ratings_wide[, isbn])
+  
+  # Normalize the similarities (to ensure they sum to 1)
+  stdW <- stdW / sum(stdW, na.rm = TRUE)
+  
+  # Calculate the predicted rating using weighted sum
+  ub_rating <- sum(ratings_wide[, isbn] * stdW, na.rm = TRUE)
+  
+  return(ub_rating)
+}
+
+# Apply the function across the dataframe
+test_set$UB_pred <- mapply(ub_predict_rating, 
+                           test_set$User.ID, 
+                           test_set$ISBN, 
+                           MoreArgs = list(ratings_wide = ratings_wide, 
+                                           user_similarities = user_similarities))
+
+```
+
 ## Item-Based Collaborative Filtering
 
+First we need to compute the similarities between all pairs of book. We can reuse the same code we used to compute user similarities, if we first transpose the books matrix.
+
+```{r}
+# transpose the matrix
+
+books_user <- ratings_wide
+
+books_user_matrix <- as.matrix(books_user)
+
+# Replace NAs with 0, as cosine similarity doesn't handle NAs directly
+books_user_matrix[is.na(books_user_matrix)] <- 0
+
+# Convert the matrix to a sparse matrix
+books_user_matrix_sparse <- Matrix(books_user_matrix, sparse = TRUE)
+
+# Assuming ratings_matrix_sparse is a sparse matrix (of class dgCMatrix)
+
+# Compute cosine similarity using proxyC
+item_similarities <- simil(books_user_matrix_sparse, method = "cosine")
+
+# This should be faster than using a dense matrix
+
+# Convert the result to a dense matrix if needed
+item_similarities <- as.matrix(item_similarities)
+
+# View the first few rows and columns
+item_similarities[1:5, 1:5]
+```
+
+```{r}
+# make predictions
+```
+
 ## Collaborative filtering with matrix factorisation
+
+```{r}
+# in order to do matrix factorisation we need to make the user IDs and book titles as factors
+mf <- ratings_books_users %>%
+  select(User.ID, ISBN, Book.Title, Book.Rating) %>%
+  mutate(User.ID = as.factor(User.ID)) %>%
+  mutate(Book.Title = as.factor(Book.Title)) 
+
+mf %>% drop_na()
+
+# Initialize the recosystem object
+r <- Reco()
+
+# Create train and test sets (if you haven't already)
+set.seed(123)  # For reproducibility
+train_indices <- sample(nrow(mf), size = 0.8 * nrow(mf))
+train_set <- mf[train_indices, ]
+test_set <- mf[-train_indices, ]
+
+# Prepare the training and testing data for recosystem
+train_data <- data_memory(
+  user_index = train_set$User.ID, 
+  item_index = train_set$Book.Title, 
+  rating = train_set$Book.Rating
+)
+
+test_data <- data_memory(
+  user_index = test_set$User.ID, 
+  item_index = test_set$Book.Title, 
+  rating = test_set$Book.Rating
+)
+
+# Train the model on the training set
+r$train(train_data)
+
+# Predict on the test set
+predicted_ratings <- r$predict(test_data)
+
+# Calculate MSE
+mse <- mean((test_set$Book.Rating - predicted_ratings)^2)
+print(mse) # 3.39176
+
+# Calculate RMSE
+rmse <- sqrt(mean((test_set$Book.Rating - predicted_ratings)^2))
+print(rmse) # 1.841673
+```
+
+```{r}
+# add ratings to df
+test_set$MF_pred <- predicted_ratings
+```
+
 
 ### With regularisation term
 
