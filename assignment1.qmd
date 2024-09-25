@@ -52,9 +52,13 @@ b\) Assess the accuracy of the matrix factorisation recommender system with and 
 
 c\) Create a final model that ensembles the predictions from the three approaches, and then assess the accuracy of the ensemble predictions.
 
+In this report I have opted to build specific recommender systems for young adults between the ages of 18 and 25. 
+
 # Introduction to Data Mining and Recommender Systems
 
-Recommender systems utilise data mining techniques to offer personalised suggestions by analysing patterns in user preferences and behaviours (Data Mining: Concepts and Techniques, 2012). The collaborative filtering approach specifically focuses on identifying users with similar tastes or preferences, recommending items based on the opinions and actions of those with shared interests. This method may also take into account a user’s social environment to enhance the relevance of the recommendations.
+In the era of big data, recommender systems have become an integral part to many online systems, providing users with personalised suggestions aimed at enhancing user engagement and satisfaction. These systems utilise data mining techniques to offer personalised suggestions by analysing patterns in user preferences and behaviours (Data Mining: Concepts and Techniques, 2012). 
+
+The collaborative approach, one of the most widely used approaches, is a filtering approach that specifically focuses on identifying users with similar tastes or preferences, recommending items based on the opinions and actions of those with shared interests. This method may also take into account a user’s social environment to enhance the relevance of the recommendations. Here we will focus on the use and application of the User-Based, Item-Based and Matrix Factorisation collaborative filtering approaches. But first, it is important to understand the concept of _cosine similarity_ and its relevance to the former two approaches. 
 
 ## Cosine Similarity
 
@@ -856,7 +860,6 @@ results <- data.frame(
 print(results)
 ```
 
-## Comparison of the five models
 
 # Discussion
 
