@@ -1,5 +1,7 @@
 # Book Recommendation System for Young Adults
 
+> **Note**: This repository includes both an [HTML](https://github.com/jessicastow/book_recommender/blob/main/assignment1.html) and [PDF](https://github.com/jessicastow/book_recommender/blob/main/assignment1.pdf) versions of my write-up, along with the corresponding code.
+
 This project implements a **Book Recommendation System** for young adults, focusing on users aged 18-25. The system is built using collaborative filtering techniques and matrix factorisation to provide personalised book suggestions based on users' past ratings.
 
 ## Project Overview
