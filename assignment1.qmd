@@ -2,14 +2,8 @@
 title: "Book Recommendation System for Young Adults"
 author: "Jessica Stow (STWJES003@MYUCT.AC.ZA)"
 date: "25 September 2024"
-output: 
-  html_document:
-    fig_width: 8
-    fig_height: 4
-    code_folding: true
-  pdf_document:
-    fig_width: 8
-    fig_height: 4
+format: pdf
+
 ---
 
 # View this report on my GitHub profile!
@@ -32,6 +26,8 @@ This report's repository can be viewed on [my GitHub profile](https://github.com
 
 -   I acknowledge that copying someone else’s assignment or essay, or part of it, is wrong, and declare that this is my own work.
 
+\newpage
+
 # Objectives
 
 The objectives of this report were as follows:
@@ -52,13 +48,15 @@ b\) Assess the accuracy of the matrix factorisation recommender system with and 
 
 c\) Create a final model that ensembles the predictions from the three approaches, and then assess the accuracy of the ensemble predictions.
 
-In this report I have opted to build specific recommender systems for young adults between the ages of 18 and 25.
+In this report I have opted to build specific recommender systems for young adults between the ages of 18 and 25. 
+
+\newpage
 
 # Introduction to Data Mining and Recommender Systems
 
-In the era of big data, recommender systems have become an integral part to many online systems, providing users with personalised suggestions aimed at enhancing user engagement and satisfaction. These systems utilise data mining techniques to offer personalised suggestions by analysing patterns in user preferences and behaviours (Data Mining: Concepts and Techniques, 2012).
+In the era of big data, recommender systems have become an integral part to many online systems, providing users with personalised suggestions aimed at enhancing user engagement and satisfaction. These systems utilise data mining techniques to offer personalised suggestions by analysing patterns in user preferences and behaviours (Data Mining: Concepts and Techniques, 2012). 
 
-The collaborative approach, one of the most widely used approaches, is a filtering approach that specifically focuses on identifying users with similar tastes or preferences, recommending items based on the opinions and actions of those with shared interests. This method may also take into account a user’s social environment to enhance the relevance of the recommendations. Here we will focus on the use and application of the User-Based, Item-Based and Matrix Factorisation collaborative filtering approaches. But first, it is important to understand the concept of *cosine similarity* and its relevance to the former two approaches.
+The collaborative approach, one of the most widely used approaches, is a filtering approach that specifically focuses on identifying users with similar tastes or preferences, recommending items based on the opinions and actions of those with shared interests. This method may also take into account a user’s social environment to enhance the relevance of the recommendations. Here we will focus on the use and application of the User-Based, Item-Based and Matrix Factorisation collaborative filtering approaches. But first, it is important to understand the concept of _cosine similarity_ and its relevance to the former two approaches. 
 
 ## Cosine Similarity
 
@@ -87,6 +85,8 @@ Cosine similarity is again used to calculate similarity. If two items are of int
 Matrix factorisation offers a different approach to collaborative filtering, rooted in linear algebra, where the goal is to fill in missing values within a matrix. Also known as matrix decomposition, it involves representing a matrix as the product of two smaller matrices. The key concept behind this method is the discovery of **latent factors** — hidden features that capture meaningful patterns in the data.
 
 In recommendation systems, matrix factorisation decomposes the user-item ratings matrix into two smaller matrices in such a way that the known ratings are closely approximated. A key advantage of this approach is that, while the original ratings matrix is incomplete (with missing entries), the decomposed matrices are fully populated. This allows for predicting the missing values in the original matrix, effectively filling in the blanks and making recommendations based on the latent factors derived from the data.
+
+\newpage
 
 # Data description
 
@@ -123,6 +123,8 @@ The dataset consists of three files:
 `ISBN`: the ISBN (identifier) of the book rated.
 
 `Book.Rating`: the rating given by the user. These ratings are either explicit (expressed on a scale of 1-10 where higher values indicated higher appreciation), or implicit, expressed by 0.
+
+\newpage
 
 # Exploratory data analysis
 
@@ -201,14 +203,16 @@ User location and additional book details were excluded from the analysis, as th
 
 User ages ranged from 0 to 244 years, with a mean of 35 and a median of 32. This wide range presents significant issues, as it is implausible for users to be 0 or 244 years old. These outliers are likely due to data entry errors. After excluding these extreme values, the age distribution appears largely symmetrical and uniform.
 
-```{r include=TRUE}
+```{r}
 # USERS -----------------------------------------------------------------------
 # what is the spread of user ages?
 min(users$Age, na.rm = TRUE) # minimum age = 0 
 mean(users$Age, na.rm = TRUE) # mean age 35 years
 median(users$Age, na.rm = TRUE) # 32 
 max(users$Age, na.rm = TRUE) # max age 244
+```
 
+```{r include=TRUE}
 # Visualise the range of 'Age' using a boxplot
 boxplot(users$Age, 
         main = "Figure 1: Boxplot of User Age", 
@@ -222,14 +226,17 @@ boxplot(users$Age,
 
 Book ratings ranged from 0 to 10, with a rating of 0 signifying an implicit interaction, indicating that the user may have read or interacted with the book without providing an explicit rating. Ratings between 1 and 10 were explicit, reflecting direct user input. As illustrated in *Figure 2* below, the majority of ratings were implicit, which will be less valuable for our recommender system as we proceed.
 
-```{r include=TRUE}
+```{r}
 # RATINGS -----------------------------------------------------------------------
 # what is the spread of the ratings variable?
 min(ratings$Book.Rating, na.rm = TRUE) # minimum rating = 0 
 mean(ratings$Book.Rating, na.rm = TRUE) # mean age 35 years
 median(ratings$Book.Rating, na.rm = TRUE) # 32 
 max(ratings$Book.Rating, na.rm = TRUE) # max rating = 10
+```
 
+
+```{r include=TRUE}
 # Visualise the range of 'rating' using a histogram
 hist(ratings$Book.Rating, 
      breaks = 11, 
@@ -304,6 +311,8 @@ book_avg_ratings <- ratings %>%
 head(book_avg_ratings, 10)
 
 ```
+
+\newpage
 
 # Methods
 
@@ -398,19 +407,11 @@ ratings_books_users <- ratings_books_users %>%
   filter(!is.na(Age))
 ```
 
-The final merged data frame contained the following variables: the book's ISBN, title, author, year of publication, the user's rating, and their age. It comprised 10 768 ratings, and the first 50 can be viewed by exploring the data table below.
+The final merged data frame contained the following variables: the book's ISBN, title, author, year of publication, the user's rating, and their age. It comprised 10 768 ratings.
 
 ```{r}
 nrow(ratings_books_users) # 10768
 colnames(ratings_books_users)
-```
-
-```{r include=TRUE}
-datatable(
-  head(ratings_books_users, 50), 
-  rownames = FALSE,
-  options = list(dom = "tip", pageLength = 5)
-)
 ```
 
 ## Collaborative filtering with matrix factorisation
@@ -773,19 +774,20 @@ test_set$ensemble_pred <- mapply(ensemble_mean,
 
 The predictions from the five models were compared with the actual values, and their accuracy was assessed using mean squared error (MSE) and root mean squared error (RMSE) as evaluation metrics.
 
+\newpage
+
 # Results
 
 The accuracy results have been represented in *Table 1* below, along with a summary of the key insights.
 
 ### Table 1: Collaborative Filtering Model Performance Comparison
-
-| Model                                         | MSE      | RMSE     |
-|-----------------------------------------------|----------|----------|
-| Matrix Factorisation (without regularisation) | 3.39     | 1.84     |
-| Matrix Factorisation (with L2 regularisation) | 3.30     | 1.82     |
-| User-based Collaborative Filtering            | 11.75    | 3.43     |
-| Item-based Collaborative Filtering            | 3861.38  | 62.14    |
-| **Ensemble Model**                            | **1.41** | **1.19** |
+| Model                                  | MSE      | RMSE    |
+|----------------------------------------|----------|---------|
+| Matrix Factorisation (without reg.)    | 3.39     | 1.84    |
+| Matrix Factorisation (with reg.)       | 3.30     | 1.82    |
+| User-based Collaborative Filtering     | 11.75    | 3.43    |
+| Item-based Collaborative Filtering     | 3861.38  | 62.14   |
+| **Ensemble Model**                     | **1.41** | **1.19**|
 
 1.  **CF with MF (without regularisation):** The matrix factorisation model without regularisation performs reasonably well, but the absence of regularisation may lead to overfitting. This can cause the model to perform better on training data but slightly worse on unseen data compared to regularised models.
 
@@ -796,6 +798,8 @@ The accuracy results have been represented in *Table 1* below, along with a summ
 4.  **Item-based CF:** The item-based collaborative filtering model performs poorly, with a dramatically higher MSE and RMSE compared to other methods. This suggests that item similarity is not as effective in predicting ratings in this dataset, likely due to the large number of sparse entries or poor similarity measures among items.
 
 5.  **Ensemble Model:** The ensemble model, which averages predictions from the user-based, item-based, and matrix factorisation models, performs the best overall. Its MSE and RMSE are the lowest, indicating that combining the strengths of different models results in improved prediction accuracy. The ensemble approach seems to balance the shortcomings of individual models, especially the weaknesses of user-based and item-based collaborative filtering.
+
+\newpage
 
 In summary:
 
@@ -840,6 +844,8 @@ mse_ensemble <- mean((test_set$Book.Rating - test_set$ensemble_pred)^2) # 1.4126
 rmse_ensemble <- sqrt(mean((test_set$Book.Rating - test_set$ensemble_pred)^2)) # 1.188541
 ```
 
+\newpage
+
 # Discussion
 
 The results of the five collaborative filtering models highlight significant differences in performance across the methods implemented. Each model offers its own unique strengths and weaknesses, and the results provide insights into the effectiveness of different recommendation techniques, particularly when applied to the specific demographic of young adult readers.
@@ -858,7 +864,7 @@ Additionally, user-based approaches can be more susceptible to issues of variabi
 
 ## Item-Based Collaborative Filtering
 
-The item-based collaborative filtering (IBCF) model yielded the worst performance with a significantly higher RMSE of **62.14**. This high error indicates that item-based similarities were not sufficient to generate accurate predictions in this dataset. One possible explanation is that the dataset may contain too many sparsely-rated books, leading to inaccurate similarity calculations between items.
+The item-based collaborative filtering (IBCF) model yielded the worst performance with a significantly higher RMSE of **62.14**. This high error indicates that item-based similarities were not sufficient to generate accurate predictions in this dataset. One possible explanation is that the dataset may contain too many sparsely-rated books, leading to inaccurate similarity calculations between items. 
 
 This method could benefit from further data preprocessing such as only including books that have a ratings count above a certain threshold.
 
@@ -877,6 +883,8 @@ Another potential limitation is the relatively basic hyperparameter tuning proce
 # Conclusion
 
 In conclusion, the results demonstrate the power of ensemble models in creating robust recommender systems, particularly when combining collaborative filtering approaches. Future work could expand on this by incorporating additional data sources, experimenting with more advanced algorithms, and fine-tuning model parameters to further enhance performance.
+
+\newpage
 
 # References
 

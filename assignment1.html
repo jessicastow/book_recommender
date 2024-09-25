@@ -372,6 +372,44 @@ window.Quarto = {
 <section id="results" class="level1">
 <h1>Results</h1>
 <p>The accuracy results have been represented in <em>Table 1</em> below, along with a summary of the key insights.</p>
+<section id="table-1-collaborative-filtering-model-performance-comparison" class="level3">
+<h3 class="anchored" data-anchor-id="table-1-collaborative-filtering-model-performance-comparison">Table 1: Collaborative Filtering Model Performance Comparison</h3>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Model</th>
+<th>MSE</th>
+<th>RMSE</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Matrix Factorisation (without reg.)</td>
+<td>3.39</td>
+<td>1.84</td>
+</tr>
+<tr class="even">
+<td>Matrix Factorisation (with reg.)</td>
+<td>3.30</td>
+<td>1.82</td>
+</tr>
+<tr class="odd">
+<td>User-based Collaborative Filtering</td>
+<td>11.75</td>
+<td>3.43</td>
+</tr>
+<tr class="even">
+<td>Item-based Collaborative Filtering</td>
+<td>3861.38</td>
+<td>62.14</td>
+</tr>
+<tr class="odd">
+<td><strong>Ensemble Model</strong></td>
+<td><strong>1.41</strong></td>
+<td><strong>1.19</strong></td>
+</tr>
+</tbody>
+</table>
 <ol type="1">
 <li><p><strong>CF with MF (without regularisation):</strong> The matrix factorisation model without regularisation performs reasonably well, but the absence of regularisation may lead to overfitting. This can cause the model to perform better on training data but slightly worse on unseen data compared to regularised models.</p></li>
 <li><p><strong>CF with MF (with regularisation):</strong> The inclusion of L2 regularisation marginally improves the performance, reducing both MSE and RMSE. This suggests that regularisation helps prevent overfitting, allowing the model to generalise better to unseen data by penalising overly complex latent factors.</p></li>
@@ -385,6 +423,7 @@ window.Quarto = {
 <li><strong>Matrix factorisation with regularisation</strong> is the second-best performing model, as it effectively generalises the data and avoids overfitting.</li>
 <li><strong>User-based</strong> and especially <strong>item-based collaborative filtering</strong> perform poorly, highlighting the limitations of these traditional techniques, particularly in datasets with sparsity or diverse rating patterns.</li>
 </ul>
+</section>
 </section>
 <section id="discussion" class="level1">
 <h1>Discussion</h1>
