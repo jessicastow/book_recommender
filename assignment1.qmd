@@ -421,9 +421,9 @@ mf <- ratings_books_users %>%
   mutate(ISBN = as.factor(ISBN)) 
 ```
 
-After preparing the data, we initialised a matrix factorisation model using the `recosystem` package by creating an instance of the Reco() object. This object serves as the model that will be trained on our data to learn user-item interactions.
+After preparing the data, we initialised a matrix factorisation model using the `recosystem` package by creating an instance of the `Reco()` object. This object serves as the model that will be trained on our data to learn user-item interactions.
 
-Next, we split the data into training and test sets to evaluate the model’s performance. We used an 80/20 split, where 80% of the data was randomly selected for training and the remaining 20% was used for testing. To ensure reproducibility (so that the same random split can be generated each time the code is run), we set a random seed.
+Next, we split the data into training and test sets to evaluate the model’s performance. We used an 80/20 split, where 80% of the data was randomly selected for training and the remaining 20% was used for testing. To ensure reproducibility so that the same random split can be generated each time the code is run, we set a random seed.
 
 ```{r}
 # Initialise the recosystem object
@@ -446,9 +446,9 @@ To use the `recosystem` package for matrix factorisation, we need to convert the
 
 **For the testing data:**
 
--   A similar process is applied, but with the test set. The `user_index` and `item_index` are specified along with the rating, allowing us to evaluate the model's performance on unseen data.
+-   A similar process was applied, but with the test set. The `user_index` and `item_index` were specified along with the rating, allowing for evaluation of the model's performance on unseen data.
 
-
+-   The training set comprised 8,614 observations, which were utilised to train the model. 
 
 ```{r}
 # Prepare the training and testing data for recosystem
@@ -468,13 +468,13 @@ test_data <- data_memory(
 )
 ```
 
-We then performed collaborative filtering with matrix factorisation both with and without a regularisation term.
+Collaborative filtering was subsequently conducted using matrix factorisation, both with and without the inclusion of a regularisation term.
 
 ### Without regularisation term
 
-The matrix factorisation model is trained on the training set using the `train()` function from the `recosystem` package. Without specifying a regularisation term, the model relies purely on learning latent factors for users and items without penalising large or complex factor values. This can lead to overfitting, especially with sparse data, because the model may fit the training data too closely, capturing noise rather than generalisable patterns.
+The matrix factorisation model was trained on the training set using the `train()` function from the `recosystem` package. In the absence of a regularisation term, the model exclusively learned latent factors for users and items without penalising large or complex factor values. This approach increased the risk of overfitting, particularly with sparse data, as the model could fit the training data too closely, capturing noise rather than identifying generalisable patterns.
 
-After the training phase, predictions were made on the test set using the `predict()` function. The predicted ratings were stored for later evaluation. Since there was no regularisation, the model might perform well on the training set but could struggle to generalise to new, unseen data in the test set, potentially leading to poorer predictive accuracy.
+After completing the training phase, predictions were generated for the test set using the `predict()` function. These predicted ratings were stored for later evaluation. However, due to the lack of regularisation, while the model might have performed well on the training set, it may have struggled to generalise to unseen data in the test set, potentially resulting in reduced predictive accuracy.
 
 ```{r}
 # Train the model on the training set
@@ -486,17 +486,16 @@ test_set$MF_pred <- r$predict(test_data)
 
 ### With regularisation term
 
-To enhance the performance of matrix factorisation in collaborative filtering, we introduced L2 regularisation. L2 regularisation adds a penalty term to the loss function, discouraging large parameter values. This helps prevent overfitting, especially in sparse datasets, which is common in recommendation systems. In the `recosystem` package, L2 regularisation is applied to both user and item latent factors by setting `costp_l2` and `costq_l2` during model training. These parameters control the strength of regularisation for the user and item factors, respectively.
+To improve the performance of matrix factorisation in collaborative filtering, L2 regularisation was introduced. L2 regularisation incorporates a penalty term into the loss function, which discourages large parameter values. This technique helps mitigate overfitting, particularly in sparse datasets, a common issue in recommendation systems. In the `recosystem` package, L2 regularisation is applied to both user and item latent factors by adjusting the `costp_l2` and `costq_l2` parameters during model training. These parameters regulate the strength of regularisation for the user and item factors, respectively.
 
-We conducted a grid search to find the optimal combination of `costp_l2` and `costq_l2` values that would yield the lowest RMSE score for our predictions.
+A grid search was conducted to determine the optimal combination of `costp_l2` and `costq_l2` values that would minimise the RMSE for the predictions.
 
 The following values were tested:
 
 - `costp_l2`: 0.001, 0.01, 0.1, 0.5, 0.6, 0.8, 1
-
 - `costq_l2`: 0.001, 0.01, 0.1, 0.5, 0.6, 0.8, 1
 
-This approach allowed us to identify the best regularisation settings to improve prediction accuracy and prevent overfitting.
+This method enabled the identification of the most effective regularisation settings to enhance prediction accuracy and prevent overfitting.
 
 ```{r}
 # Define the grid search parameters
@@ -550,9 +549,9 @@ test_set$MF_pred_L2 <- r$predict(test_data)
 
 ## User-Based Collaborative Filtering
 
-To calculate user similarities, we first converted our ratings matrix into a wide format, where each row represented a user (User.ID) and each column represented a book (ISBN).
+To compute user similarities, the ratings matrix was first converted into a wide format, where each row corresponded to a user (User.ID) and each column represented a book (ISBN).
 
-Recognising that users have different rating habits, with some users rating consistently higher or lower than others, we applied mean-centering to standardise the data. Without this normalisation, users with similar preferences might appear dissimilar due to these differences in rating styles. By using mean-centering, we adjusted the ratings to reflect how much a user liked or disliked a book **relative to their own average**. This prepared the data for computing the users' cosine similarity, ensuring that it captured users’ true preferences and enabled more accurate recommendations.
+Given that users exhibit different rating tendencies, with some consistently assigning higher or lower ratings, mean-centering was applied to standardise the data. Without this normalisation, users with similar preferences could appear dissimilar due to variations in their rating styles. Mean-centering adjusted the ratings to reflect how much a user liked or disliked a book **relative to their own average**, thereby aligning their rating patterns. This step ensured the data was appropriately prepared for calculating cosine similarity between users, capturing their true preferences and facilitating more accurate recommendations.
 
 ```{r}
 # transform ratings matrix into wide format 
@@ -580,7 +579,7 @@ ratings_wide <- as.matrix(ratings_wide)
 row.names(ratings_wide) <- sorted_my_users
 ```
 
-We replaced any `NA` values, representing missing ratings for a given book, with zero. This step was necessary because cosine similarity cannot handle missing values. The matrix was then converted into a sparse format, which is more computationally efficient when working with matrices that contain a large number of zero values.
+Any `NA` values, representing missing ratings for a given book, were replaced with zero. This step was essential, as cosine similarity cannot process missing values. Following this, the matrix was converted into a sparse format, which is more computationally efficient when dealing with matrices that contain a high proportion of zero values.
 
 ```{r}
 # Replace NAs with 0, since cosine similarity doesn't handle NAs directly
@@ -591,7 +590,7 @@ ratings_wide[is.na(ratings_wide)] <- 0
 ratings_wide_sparse <- Matrix(ratings_wide, sparse = TRUE)
 ```
 
-Finally, we calculated cosine similarities between users based on their book ratings using the `simil()` function from the `proxyC` package, which is well-suited for efficiently handling sparse matrices. The user similarities sparse matrix was converted to a dense matrix, to allow for easy computation and predictions later.
+Cosine similarities between users, based on their book ratings, were calculated using the `simil()` function from the `proxyC` package, which is optimised for efficiently handling sparse matrices. The resulting user similarities sparse matrix was then converted into a dense matrix to facilitate easier computation and predictions in subsequent steps.
 
 ```{r}
 # Compute cosine similarity between users based on ratings given to books
@@ -607,11 +606,11 @@ user_similarities[1:5, 1:5]
 
 ### Predictions
 
-To assess the UB collaborative filtering model's predictions, we chose to make predictions on the same test set used in the collaborative filtering model with matrix factorisation. We created a function to calculate the user-based predicted rating, while adjusting for each user's average rating.
+To evaluate the predictions of the user-based collaborative filtering model, predictions were made on the same test set used in the matrix factorisation model. A function was created to calculate the user-based predicted rating while accounting for each user's average rating.
 
-In the function, we first retrieve the cosine similarity scores for the target user and standardise them so they sum to one, but only across users who have rated the specific book. The predicted rating for the book is then calculated as a weighted sum of the ratings given by other users, with the weights being the standardised similarity scores. Finally, the predicted rating is adjusted by adding the user’s average rating to bring it back to the original scale.
+Within the function, the cosine similarity scores for the target user were first retrieved and then standardised so that they summed to one, but only across users who had rated the specific book. The predicted rating for the book was computed as a weighted sum of the ratings provided by other users, with the weights corresponding to the standardised similarity scores. To return the prediction to its original scale, the user's average rating was added to the result.
 
-This approach ensured that both user similarities and individual rating tendencies are considered when making predictions.
+This approach ensured that both user similarities and individual rating patterns were accounted for when generating predictions.
 
 ```{r}
 # Define a function to calculate the user-based predicted rating with user mean adjustment
@@ -632,7 +631,7 @@ ub_predict_rating <- function(user_id, isbn, ratings_wide, user_similarities, us
 }
 ```
 
-We then applied the function across the same test used in the collaborative filtering with matrix factorisation model.
+The function was then applied to the same test set used in the collaborative filtering model with matrix factorisation.
 
 ```{r}
 # Apply the function across the test set dataframe
@@ -647,9 +646,9 @@ test_set$UB_pred <- mapply(ub_predict_rating,
 
 ## Item-Based Collaborative Filtering
 
-To calculate item similarities, we first converted our ratings matrix into a wide format, where each row represented a book (ISBN) and each column represented a user (User.ID).
+To compute item similarities, the ratings matrix was first transformed into a wide format, where each row represented a book (ISBN) and each column represented a user (User.ID).
 
-Recognising that books may receive different ratings from various users, we applied mean-centering to standardise the data. Without this normalisation, books with similar popularity might appear dissimilar due to differences in user rating styles. By using mean-centering, we adjusted the ratings to reflect how well a book was rated relative to its average rating across users. This prepared the data for computing the items' cosine similarity, ensuring that it captured each book’s true popularity and enabled more accurate recommendations.
+Given that books may receive varying ratings from different users, mean-centering was applied to standardise the data. Without this normalisation, books with similar levels of popularity could appear dissimilar due to differences in user rating habits. By applying mean-centering, the ratings were adjusted to reflect how well a book was rated relative to its average rating across all users. This step ensured that the data was properly prepared for calculating cosine similarity between items, capturing each book’s true popularity and enabling more accurate recommendations.
 
 ```{r}
 # Transform ratings matrix into wide format, with books (ISBN) as rows and users (User.ID) as columns
@@ -677,7 +676,7 @@ books_ratings_wide <- as.matrix(books_ratings_wide)
 row.names(books_ratings_wide) <- sorted_my_books
 ```
 
-We replaced any NA values, representing missing ratings for a given user, with zero. This step was necessary because cosine similarity cannot handle missing values. The matrix was then converted into a sparse format, which is more computationally efficient when working with matrices that contain a large number of zero values.
+Any `NA` values, representing missing ratings for a given user, were replaced with zero. This step was essential as cosine similarity cannot process missing values. The matrix was then transformed into a sparse format, improving computational efficiency when working with matrices containing a significant number of zero values.
 
 ```{r}
 # Replace NAs with 0, since cosine similarity doesn't handle NAs directly
@@ -687,7 +686,7 @@ books_ratings_wide[is.na(books_ratings_wide)] <- 0
 books_ratings_wide <- Matrix(books_ratings_wide, sparse = TRUE)
 ```
 
-Finally, we calculated cosine similarities between books based on their ratings from users using the simil() function from the proxyC package, which is well-suited for efficiently handling sparse matrices. The item similarities sparse matrix was converted to a dense matrix to allow for easier computation and predictions later.
+Cosine similarities between books, based on their ratings from users, were calculated using the `simil()` function from the `proxyC` package, which is optimised for efficiently handling sparse matrices. The resulting item similarities sparse matrix was then converted into a dense matrix to facilitate easier computation and predictions in subsequent steps.
 
 ```{r}
 # Compute cosine similarity between books based on user ratings
@@ -703,11 +702,11 @@ item_similarities[1:5, 1:5]
 
 ### Predictions
 
-To assess the IB collaborative filtering model's predictions, we chose to make predictions on the same test set used in the collaborative filtering model with matrix factorisation. We created a function to calculate the user-based predicted rating, while adjusting for each user's average rating.
+To evaluate the item-based (IB) collaborative filtering model's predictions, the same test set used for the matrix factorisation model was employed. A function was developed to calculate the predicted rating for each user, while adjusting for the user's average rating.
 
-In the function, we first retrieve the cosine similarity scores for the target user and standardise them so they sum to one, but only across users who have rated the specific book. The predicted rating for the book is then calculated as a weighted sum of the ratings given by other users, with the weights being the standardised similarity scores. Finally, the predicted rating is adjusted by adding the user’s average rating to bring it back to the original scale.
+The function first retrieved the cosine similarity scores for the target item and standardised them so that they summed to one, but only across items that had been rated by the specific user. The predicted rating for the item was then calculated as a weighted sum of the ratings provided for similar items, with the weights determined by the standardised similarity scores. Finally, the predicted rating was adjusted by adding the user's average rating to return it to the original scale.
 
-This approach ensured that both user similarities and individual rating tendencies are considered when making predictions.
+This approach ensured that both item similarities and individual rating tendencies were accounted for when generating predictions.
 
 ```{r}
 # Define a function to calculate the user-based predicted rating with user mean adjustment
@@ -729,7 +728,7 @@ ib_predict_rating <- function(user_id, isbn, books_ratings_wide, item_similariti
 ```
 
 
-We then applied the function across the same test used in the collaborative filtering with matrix factorisation model.
+The function was subsequently applied to the same test set used in the matrix factorisation-based collaborative filtering model.
 
 ```{r}
 # Apply the function across the test set dataframe
@@ -743,7 +742,7 @@ test_set$IB_pred <- mapply(ib_predict_rating,
 
 ## Ensemble model
 
-As our last model we built an ensemble model which averages the predictions from the user-based, item-based and the matrix factorisation model (with regularisation) on the condition that the predictions are only considered if they fall within the range of 1 and 10 (inclusive), i.e. the predictions are valid. . 
+The final model was an ensemble, which averaged the predictions from the user-based, item-based, and matrix factorisation models (without regularisation). Predictions were only included in the averaging process if they fell within the (valid) range of 1 to 10 (inclusive).
 
 ```{r}
 # Define a function to compute the ensemble prediction
