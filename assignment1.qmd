@@ -319,7 +319,7 @@ ratings <- ratings %>%
 nrow(ratings) # 199 477 rows, therefore 950 303 rows (83% of the data) dropped
 ```
 
-User ratings were further filtered to include only those from users who had rated 10 or more books (i.e., users who rated at least the average number of books). This approach ensured a focus on active readers, providing a more reliable understanding of their preferences. After applying these filtering methods, the resulting ratings data frame contained 111 008 rows, meaning approximately 1 million observations (~90% of the original ratings data) were excluded.
+User ratings were further filtered to include only those from users who had rated 10 or more books (i.e., users who rated at least the average number of books). This approach ensured a focus on active readers, providing a more reliable understanding of their preferences. After applying these filtering methods, the resulting ratings data frame contained 111 008 rows, meaning approximately 1 million observations (\~90% of the original ratings data) were excluded.
 
 ```{r}
 # only keep ratings when users have rated 10 or more books
@@ -448,7 +448,7 @@ To apply the `recosystem` package for matrix factorisation, the training and tes
 
 -   A similar process was applied to the test set. The `user_index` and `item_index` were specified along with the actual ratings, enabling the evaluation of the model's performance on unseen data.
 
--   The training set comprised 8614 observations, which were utilised to train the model. 
+-   The training set comprised 8614 observations, which were utilised to train the model.
 
 ```{r}
 # Prepare the training and testing data for recosystem
@@ -492,8 +492,8 @@ A grid search was conducted to determine the optimal combination of `costp_l2` a
 
 The following values were tested:
 
-- `costp_l2`: 0.001, 0.01, 0.1, 0.5, 0.6, 0.8, 1
-- `costq_l2`: 0.001, 0.01, 0.1, 0.5, 0.6, 0.8, 1
+-   `costp_l2`: 0.001, 0.01, 0.1, 0.5, 0.6, 0.8, 1
+-   `costq_l2`: 0.001, 0.01, 0.1, 0.5, 0.6, 0.8, 1
 
 This method enabled the identification of the most effective regularisation settings to enhance prediction accuracy and prevent overfitting.
 
@@ -528,7 +528,7 @@ for (costp_l2 in costp_l2_values) {
 }
 ```
 
-The best combination of hyperparameters were a `costp_l2` of 0.5 and a `costq_l2` of 0.01, which resulted in a RMSE of ~1.83. 
+The best combination of hyperparameters were a `costp_l2` of 0.5 and a `costq_l2` of 0.01, which resulted in a RMSE of \~1.83.
 
 ```{r}
 # Find the best hyperparameters
@@ -727,7 +727,6 @@ ib_predict_rating <- function(user_id, isbn, books_ratings_wide, item_similariti
 }
 ```
 
-
 The function was subsequently applied to the same test set used in the matrix factorisation-based collaborative filtering model.
 
 ```{r}
@@ -766,75 +765,98 @@ test_set$ensemble_pred <- mapply(ensemble_mean,
                                  test_set$IB_pred)
 ```
 
+## Accuracy assessment
+
+The predictions from the five models were compared with the actual values, and their accuracy was assessed using mean squared error (MSE) and root mean squared error (RMSE) as evaluation metrics.
 
 # Results
 
-## Accuracy assessment
+The accuracy results have been represented in *Table 1* below, along with a summary of the key insights.
 
-### Collaborative filtering with matrix factorisation model - Without regularisation term
+1.  **CF with MF (without regularisation):** The matrix factorisation model without regularisation performs reasonably well, but the absence of regularisation may lead to overfitting. This can cause the model to perform better on training data but slightly worse on unseen data compared to regularised models.
 
-```{r}
-# Assess CF MF model using MSE & RMSE
-# Calculate MSE
-mse_MF <- mean((test_set$Book.Rating - test_set$MF_pred)^2)
-print(mse_MF) # 3.39176
+2.  **CF with MF (with regularisation):** The inclusion of L2 regularisation marginally improves the performance, reducing both MSE and RMSE. This suggests that regularisation helps prevent overfitting, allowing the model to generalise better to unseen data by penalising overly complex latent factors.
 
-# Calculate RMSE
-rmse_MF <- sqrt(mean((test_set$Book.Rating - test_set$MF_pred)^2))
-print(rmse_MF) # 1.841673
-```
+3.  **User-based CF:** The user-based collaborative filtering model performs significantly worse compared to the matrix factorisation models. The high MSE and RMSE indicate that this approach might struggle to capture the complex relationships between users and books, especially in cases of sparse data.
 
-### Collaborative filtering with matrix factorisation model - With regularisation term
+4.  **Item-based CF:** The item-based collaborative filtering model performs poorly, with a dramatically higher MSE and RMSE compared to other methods. This suggests that item similarity is not as effective in predicting ratings in this dataset, likely due to the large number of sparse entries or poor similarity measures among items.
 
-```{r}
-# Assess CF MF model with L2 regularisation term, using MSE & RMSE
-# Calculate MSE
-mse_MF_L2 <- mean((test_set$Book.Rating - test_set$MF_pred_L2)^2)
-print(mse_MF_L2) # 3.303717
+5.  **Ensemble Model:** The ensemble model, which averages predictions from the user-based, item-based, and matrix factorisation models, performs the best overall. Its MSE and RMSE are the lowest, indicating that combining the strengths of different models results in improved prediction accuracy. The ensemble approach seems to balance the shortcomings of individual models, especially the weaknesses of user-based and item-based collaborative filtering.
 
-# Calculate RMSE
-rmse_MF_L2 <- sqrt(mean((test_set$Book.Rating - test_set$MF_pred_L2)^2))
-print(rmse_MF_L2) # 1.817613
-```
+In summary:
 
-### User-Based Collaborative filtering
+-   The **ensemble model** outperforms all other approaches, demonstrating that a combined approach leads to more accurate predictions.
+-   **Matrix factorisation with regularisation** is the second-best performing model, as it effectively generalises the data and avoids overfitting.
+-   **User-based** and especially **item-based collaborative filtering** perform poorly, highlighting the limitations of these traditional techniques, particularly in datasets with sparsity or diverse rating patterns.
 
 ```{r}
-# Assess UB model predictions using MSE and RMSE
+# CF WITH MF - WITHOUT REGULARISATION TERM ##########################################################
 # Calculate MSE
-mse_UB <- mean((test_set$Book.Rating - test_set$UB_pred)^2)
-print(mse_UB) # 11.75365
+mse_MF <- mean((test_set$Book.Rating - test_set$MF_pred)^2) # 3.39176
 
 # Calculate RMSE
-rmse_UB <- sqrt(mean((test_set$Book.Rating - test_set$UB_pred)^2))
-print(rmse_UB) # 3.42836
-```
+rmse_MF <- sqrt(mean((test_set$Book.Rating - test_set$MF_pred)^2)) # 1.841673
 
-### Item-Based Collaborative filtering
+# CF WITH MF - WITH REGULARISATION TERM ##############################################################
+# Calculate MSE
+mse_MF_L2 <- mean((test_set$Book.Rating - test_set$MF_pred_L2)^2)# 3.303717
+
+# Calculate RMSE
+rmse_MF_L2 <- sqrt(mean((test_set$Book.Rating - test_set$MF_pred_L2)^2)) # 1.817613
+
+# USER-BASED CF ######################################################################################
+# Calculate MSE
+mse_UB <- mean((test_set$Book.Rating - test_set$UB_pred)^2) # 11.75365
+
+# Calculate RMSE
+rmse_UB <- sqrt(mean((test_set$Book.Rating - test_set$UB_pred)^2)) # 3.42836
+
+# ITEM-BASED CF ######################################################################################
+# Calculate MSE
+mse_IB <- mean((test_set$Book.Rating - test_set$IB_pred)^2) # 3861.38
+
+# Calculate RMSE
+rmse_IB <- sqrt(mean((test_set$Book.Rating - test_set$IB_pred)^2)) # 62.14
+
+# ENSEMBLE MODEL #####################################################################################
+# Calculate MSE
+mse_ensemble <- mean((test_set$Book.Rating - test_set$ensemble_pred)^2) # 1.41263
+
+# Calculate RMSE
+rmse_ensemble <- sqrt(mean((test_set$Book.Rating - test_set$ensemble_pred)^2)) # 1.188541
+```
 
 ```{r}
-# Assess IB model predictions using MSE and RMSE
-# Calculate MSE
-mse_IB <- mean((test_set$Book.Rating - test_set$IB_pred)^2)
-print(mse_IB) # 3861.38
+# Create a data frame to store model, MSE, and RMSE using variable names
+results <- data.frame(
+  Model = c(
+    "Matrix Factorisation (without regularisation)",
+    "Matrix Factorisation (with regularisation)",
+    "User-based CF",
+    "Item-based CF",
+    "Ensemble Model"
+  ),
+  MSE = c(
+    round(mse_MF,2),
+    round(mse_MF_L2,2),
+    round(mse_UB,2),
+    round(mse_IB,2),
+    round(mse_ensemble,2)
+  ),
+  RMSE = c(
+    round(rmse_MF,2),
+    round(rmse_MF_L2,2),
+    round(rmse_UB,2),
+    round(rmse_IB,2),
+    round(rmse_ensemble,2)
+  )
+)
 
-# Calculate RMSE
-rmse_IB <- sqrt(mean((test_set$Book.Rating - test_set$IB_pred)^2))
-print(rmse_IB) # 62.14
+# Print the table
+print(results)
 ```
 
-### Ensemble model
-
-```{r}
-# Assess accuracy of ensemble model using MSE & RMSE
-# Calculate MSE
-mse_ensemble <- mean((test_set$Book.Rating - test_set$ensemble_pred)^2)
-print(mse_ensemble) # 1.41263
-
-# Calculate RMSE
-rmse_ensemble <- sqrt(mean((test_set$Book.Rating - test_set$ensemble_pred)^2))
-print(rmse_ensemble) # 1.188541
-```
+## Comparison of the five models
 
 # Discussion
 
