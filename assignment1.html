@@ -114,7 +114,6 @@ window.Quarto = {
 </header>
 
 
-<hr>
 <section id="view-this-report-on-my-github-profile" class="level1">
 <h1>View this report on my GitHub profile!</h1>
 <p>This report’s repository can be viewed on <a href="https://github.com/jessicastow/book_recommender">my GitHub profile</a>.</p>
@@ -142,10 +141,12 @@ window.Quarto = {
 <p>a) Assess the accuracy of the matrix factorisation recommender system, using a single train/test sample.</p>
 <p>b) Assess the accuracy of the matrix factorisation recommender system with and without regularisation.</p>
 <p>c) Create a final model that ensembles the predictions from the three approaches, and then assess the accuracy of the ensemble predictions.</p>
+<p>In this report I have opted to build specific recommender systems for young adults between the ages of 18 and 25.</p>
 </section>
 <section id="introduction-to-data-mining-and-recommender-systems" class="level1">
 <h1>Introduction to Data Mining and Recommender Systems</h1>
-<p>Recommender systems utilise data mining techniques to offer personalised suggestions by analysing patterns in user preferences and behaviours (Data Mining: Concepts and Techniques, 2012). The collaborative filtering approach specifically focuses on identifying users with similar tastes or preferences, recommending items based on the opinions and actions of those with shared interests. This method may also take into account a user’s social environment to enhance the relevance of the recommendations.</p>
+<p>In the era of big data, recommender systems have become an integral part to many online systems, providing users with personalised suggestions aimed at enhancing user engagement and satisfaction. These systems utilise data mining techniques to offer personalised suggestions by analysing patterns in user preferences and behaviours (Data Mining: Concepts and Techniques, 2012).</p>
+<p>The collaborative approach, one of the most widely used approaches, is a filtering approach that specifically focuses on identifying users with similar tastes or preferences, recommending items based on the opinions and actions of those with shared interests. This method may also take into account a user’s social environment to enhance the relevance of the recommendations. Here we will focus on the use and application of the User-Based, Item-Based and Matrix Factorisation collaborative filtering approaches. But first, it is important to understand the concept of <em>cosine similarity</em> and its relevance to the former two approaches.</p>
 <section id="cosine-similarity" class="level2">
 <h2 class="anchored" data-anchor-id="cosine-similarity">Cosine Similarity</h2>
 <p>Cosine similarity is a metric used in both user-based and item-based collaborative filtering to measure how similar two vectors are.</p>
@@ -191,17 +192,17 @@ window.Quarto = {
 </section>
 <section id="exploratory-data-analysis" class="level1">
 <h1>Exploratory data analysis</h1>
-<p>There were no duplicate entries found in any of the datasets.</p>
-<p>The <code>Books</code> dataset contains information for 271 360 books, with all of these books being unique based on their ISBN.</p>
-<p>The <code>Users</code> dataset contains information for 278 858 users, with all of these users being unique based on their user IDs.</p>
-<p>The <code>Ratings</code> dataset contains information for 1 149 780 ratings. For this dataset we found that 105 283 unique users gave ratings (both explicit and implicit), this accounts for approximately 38% of the total user base. Interestingly, these users rated 340 556 books, which exceeds the number of books listed in the <code>Books</code> dataset.</p>
+<p>No duplicate entries were identified in any of the datasets.</p>
+<p>The <code>Books</code> dataset contains information on 271,360 unique books, distinguished by their ISBNs.</p>
+<p>The <code>Users</code> dataset includes details for 278,858 unique users, identified by their user IDs.</p>
+<p>The <code>Ratings</code> dataset consists of 1,149,780 ratings. Within this dataset, 105,283 unique users provided ratings (both explicit and implicit), representing approximately 38% of the total user base. Interestingly, these users rated 340,556 books, a number that exceeds the total listed in the <code>Books</code> dataset.</p>
 <section id="univariate-analysis" class="level2">
 <h2 class="anchored" data-anchor-id="univariate-analysis">Univariate analysis</h2>
-<p>We decided to investigate the following variables: user age and book ratings.</p>
-<p>We chose not to explore user location or additional book details, as they were not relevant to the objectives of this recommender system exercise.</p>
+<p>The investigation focused on two key variables: user age and book ratings.</p>
+<p>User location and additional book details were excluded from the analysis, as they were deemed irrelevant to the objectives of this recommender system exercise.</p>
 <section id="user-age" class="level3">
 <h3 class="anchored" data-anchor-id="user-age">User Age</h3>
-<p>User ages ranged from 0 to 244 years, with a mean of 35 and a median of 32. This range presents significant issues, as it’s unrealistic for users to be 0 or 244 years old. These outliers likely result from data entry errors. Excluding these extreme values reveals that the age distribution is generally symmetrical and uniform.</p>
+<p>User ages ranged from 0 to 244 years, with a mean of 35 and a median of 32. This wide range presents significant issues, as it is implausible for users to be 0 or 244 years old. These outliers are likely due to data entry errors. After excluding these extreme values, the age distribution appears largely symmetrical and uniform.</p>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0</code></pre>
@@ -226,7 +227,7 @@ window.Quarto = {
 </section>
 <section id="book-ratings" class="level3">
 <h3 class="anchored" data-anchor-id="book-ratings">Book ratings</h3>
-<p>Book ratings ranged from 0 to 10. A rating of 0 indicated an implicit interaction, meaning the user may have read or interacted with the book but did not explicitly rate it. Ratings from 1 to 10 were explicit, representing direct user input. As shown in <em>Figure 2</em> below, the majority of ratings were implicit, which will be less useful for our recommender system moving forward.</p>
+<p>Book ratings ranged from 0 to 10, with a rating of 0 signifying an implicit interaction, indicating that the user may have read or interacted with the book without providing an explicit rating. Ratings between 1 and 10 were explicit, reflecting direct user input. As illustrated in <em>Figure 2</em> below, the majority of ratings were implicit, which will be less valuable for our recommender system as we proceed.</p>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0</code></pre>
@@ -254,7 +255,7 @@ window.Quarto = {
 <h2 class="anchored" data-anchor-id="bivariate-analysis">Bivariate analysis</h2>
 <section id="ratings-by-user" class="level3">
 <h3 class="anchored" data-anchor-id="ratings-by-user">Ratings by user</h3>
-<p>We observed that one user (ID 11676) rated an impressive 13 607 books, which is significantly higher than the average of just 10 book ratings per user. When we investigated this user we noted that there is no location or age information available for them</p>
+<p>It was observed that one user (ID 11676) rated an impressive 13,607 books, a figure significantly higher than the average of just 10 book ratings per user. Upon further investigation, it was noted that this user did not provide any location or age information.</p>
 </section>
 <section id="ratings-by-book" class="level3">
 <h3 class="anchored" data-anchor-id="ratings-by-book">Ratings by book</h3>
@@ -269,23 +270,23 @@ window.Quarto = {
 <h2 class="anchored" data-anchor-id="data-manipulation">Data manipulation</h2>
 <section id="ratings" class="level3">
 <h3 class="anchored" data-anchor-id="ratings">Ratings</h3>
-<p>We decided to drop the implicit ratings (ratings equal to 0) as these are not useful in the building of our recommender model. We also chose to only keep books with 5 or more ratings to exclude books that are rarely read.</p>
-<p>We also chose to retain user ratings only for those who had rated 10 or more books (i.e., users who rated at least the average number of books). This approach ensures that we focus on active readers, providing a more reliable understanding of their preferences. These filtering methods resulted in a ratings data frame with 111 008 rows, meaning 1 038 772 observations (~90% of our ratings data) was dropped.</p>
+<p>Implicit ratings (those equal to 0) were excluded, as they are not useful for building the recommender model. Additionally, only books with 5 or more ratings were retained, in order to exclude books that are rarely read.</p>
+<p>User ratings were further filtered to include only those from users who had rated 10 or more books (i.e., users who rated at least the average number of books). This approach ensured a focus on active readers, providing a more reliable understanding of their preferences. After applying these filtering methods, the resulting ratings data frame contained 111 008 rows, meaning approximately 1 million observations (~90% of the original ratings data) were excluded.</p>
 </section>
 <section id="users" class="level3">
 <h3 class="anchored" data-anchor-id="users">Users</h3>
-<p>We decided to only investigate the user preferences of young adults between the ages of 18 and 25 (inclusive). All other ages were dropped from the data frame. We also decided to exclude the user location information as this was not helpful to our recommender model building.</p>
+<p>The analysis was narrowed to focus on the preferences of young adults between the ages of 18 and 25 (inclusive), with all other age groups excluded from the data frame. Additionally, user location information was discarded, as it did not contribute meaningfully to the recommender model development.</p>
 </section>
 <section id="books" class="level3">
 <h3 class="anchored" data-anchor-id="books">Books</h3>
-<p>We ensured that all books had a title. We then investigated the instances where the Year of Publication contained non-numeric values, as this would prevent converting the column to an integer. We found that for three books, the Book Author and Year of Publication fields had been mistakenly swapped. To address this, we implemented a solution to correct the swapped information. We then turned the year of publication column into a type integer.</p>
-<p>We kept the ISBN, book title, author and year of publication information and dropped the publisher and image URLs from the <code>books</code> data frame.</p>
+<p>It was ensured that all books had a title. An investigation was conducted into instances where the Year of Publication field contained non-numeric values, as this would prevent converting the column to an integer. It was discovered that, for three books, the Book Author and Year of Publication fields had been mistakenly swapped. This issue was resolved by correcting the swapped information. The Year of Publication column was then converted to an integer type.</p>
+<p>The ISBN, book title, author, and year of publication information were retained, while the publisher and image URLs were removed from the <code>books</code> data frame.</p>
 </section>
 <section id="joining-of-data-frames" class="level3">
 <h3 class="anchored" data-anchor-id="joining-of-data-frames">Joining of data frames</h3>
-<p>The <code>Books</code> data frame was merged with the <code>Ratings</code> data frame using a left join on the common variable<code>ISBN</code>. This ensured that all the ratings information was retained while adding the corresponding book titles and authors to the data set.</p>
-<p>To address the earlier discrepancy where more books were rated than were listed in the <code>Books</code> data frame, we checked for any missing book titles. We found that 7 249 ratings lacked corresponding book titles or any other associated information. As a result, we opted to remove these ratings from the data frame.</p>
-<p>We then merged the user information into the new data frame using a left join, matching on the shared user IDs. The left join was chosen to ensure that all data related to the books and their ratings remained intact. We then noted that we now had 97 202 ratings without age information which had to be dropped.</p>
+<p>The <code>Books</code> data frame was merged with the <code>Ratings</code> data frame using a left join on the common variable <code>ISBN</code>. This approach ensured that all ratings information was retained while adding the corresponding book titles and authors to the dataset.</p>
+<p>To resolve the earlier discrepancy, where more books were rated than were listed in the <code>Books</code> data frame, a check was performed for missing book titles. It was found that 7249 ratings lacked corresponding book titles or any associated information. Consequently, these ratings were removed from the data frame.</p>
+<p>The user information was then merged into the new data frame using a left join, matching on the shared user IDs. A left join was selected to ensure that all data related to the books and their ratings remained intact. Following this, it was noted that 97 202 ratings lacked age information and, as a result, these records were removed from the data frame.</p>
 <p>The final merged data frame contained the following variables: the book’s ISBN, title, author, year of publication, the user’s rating, and their age. It comprised 10 768 ratings, and the first 50 can be viewed by exploring the data table below.</p>
 <div class="cell">
 <div class="cell-output-display">
@@ -298,100 +299,125 @@ window.Quarto = {
 <section id="collaborative-filtering-with-matrix-factorisation-1" class="level2">
 <h2 class="anchored" data-anchor-id="collaborative-filtering-with-matrix-factorisation-1">Collaborative filtering with matrix factorisation</h2>
 <p>Matrix factorisation was implemented using the <code>recosystem</code> package. To prepare the data in the required format, we structured the ratings dataset so that each row represented a unique rating, with columns for the user ID, book ISBN, book title, and rating score. It was necessary to convert both the user IDs and book ISBNs into factors, as the matrix factorisation model in <code>recosystem</code> relies on categorical encoding of users and items. This step ensured that the model could properly identify and differentiate between users and books.</p>
-<p>After preparing the data, we initialised a matrix factorisation model using the <code>recosystem</code> package by creating an instance of the Reco() object. This object serves as the model that will be trained on our data to learn user-item interactions.</p>
-<p>Next, we split the data into training and test sets to evaluate the model’s performance. We used an 80/20 split, where 80% of the data was randomly selected for training and the remaining 20% was used for testing. To ensure reproducibility (so that the same random split can be generated each time the code is run), we set a random seed.</p>
-<p>To use the <code>recosystem</code> package for matrix factorisation, we need to convert the training and testing data into a format that the package can process. This is done by using the <code>data_memory()</code> function, which transforms the data into memory-efficient objects that <code>recosystem</code> can work with.</p>
+<p>After preparing the data, we initialised a matrix factorisation model using the <code>recosystem</code> package by creating an instance of the <code>Reco()</code> object. This object serves as the model that will be trained on our data to learn user-item interactions.</p>
+<p>Next, we split the data into training and test sets to evaluate the model’s performance. We used an 80/20 split, where 80% of the data was randomly selected for training and the remaining 20% was used for testing. To ensure reproducibility so that the same random split can be generated each time the code is run, we set a random seed.</p>
+<p>To apply the <code>recosystem</code> package for matrix factorisation, the training and testing data must be converted into a format compatible with the package. This is achieved using the <code>data_memory()</code> function, which transforms the data into memory-efficient objects that <code>recosystem</code> can process.</p>
 <p><strong>For the training data:</strong></p>
 <ul>
-<li><p>We specify the <code>user_index</code> (the user ID), <code>item_index</code> (the ISBN for each book), and the rating (the actual rating given by the user).</p></li>
-<li><p>This creates a memory-based data object that links users, books, and ratings, which will be used to train the model.</p></li>
+<li><p>The <code>user_index</code> (user ID), <code>item_index</code> (ISBN for each book), and the rating (the actual rating provided by the user) are specified.</p></li>
+<li><p>This establishes a memory-based data object that connects users, books, and ratings, which is then utilised for model training.</p></li>
 </ul>
 <p><strong>For the testing data:</strong></p>
 <ul>
-<li>A similar process is applied, but with the test set. The <code>user_index</code> and <code>item_index</code> are specified along with the rating, allowing us to evaluate the model’s performance on unseen data.</li>
+<li><p>A similar process was applied to the test set. The <code>user_index</code> and <code>item_index</code> were specified along with the actual ratings, enabling the evaluation of the model’s performance on unseen data.</p></li>
+<li><p>The training set comprised 8614 observations, which were utilised to train the model.</p></li>
 </ul>
-<p>We then performed collaborative filtering with matrix factorisation both with and without a regularisation term.</p>
+<p>Collaborative filtering was subsequently conducted using matrix factorisation, both with and without the inclusion of a regularisation term.</p>
 <section id="without-regularisation-term" class="level3">
 <h3 class="anchored" data-anchor-id="without-regularisation-term">Without regularisation term</h3>
-<p>The matrix factorisation model is trained on the training set using the <code>train()</code> function from the <code>recosystem</code> package. Without specifying a regularisation term, the model relies purely on learning latent factors for users and items without penalising large or complex factor values. This can lead to overfitting, especially with sparse data, because the model may fit the training data too closely, capturing noise rather than generalisable patterns.</p>
-<p>After the training phase, predictions were made on the test set using the <code>predict()</code> function. The predicted ratings were stored for later evaluation. Since there was no regularisation, the model might perform well on the training set but could struggle to generalise to new, unseen data in the test set, potentially leading to poorer predictive accuracy.</p>
+<p>The matrix factorisation model was trained on the training set using the <code>train()</code> function from the <code>recosystem</code> package. In the absence of a regularisation term, the model exclusively learned latent factors for users and items without penalising large or complex factor values. This approach increased the risk of overfitting, particularly with sparse data, as the model could fit the training data too closely, capturing noise rather than identifying generalisable patterns.</p>
+<p>After completing the training phase, predictions were generated for the test set using the <code>predict()</code> function. These predicted ratings were stored for later evaluation. However, due to the lack of regularisation, while the model might have performed well on the training set, it may have struggled to generalise to unseen data in the test set, potentially resulting in reduced predictive accuracy.</p>
 </section>
 <section id="with-regularisation-term" class="level3">
 <h3 class="anchored" data-anchor-id="with-regularisation-term">With regularisation term</h3>
-<p>To enhance the performance of matrix factorisation in collaborative filtering, we introduced L2 regularisation. L2 regularisation adds a penalty term to the loss function, discouraging large parameter values. This helps prevent overfitting, especially in sparse datasets, which is common in recommendation systems. In the <code>recosystem</code> package, L2 regularisation is applied to both user and item latent factors by setting <code>costp_l2</code> and <code>costq_l2</code> during model training. These parameters control the strength of regularisation for the user and item factors, respectively.</p>
-<p>We conducted a grid search to find the optimal combination of <code>costp_l2</code> and <code>costq_l2</code> values that would yield the lowest RMSE score for our predictions.</p>
+<p>To improve the performance of matrix factorisation in collaborative filtering, L2 regularisation was introduced. L2 regularisation incorporates a penalty term into the loss function, which discourages large parameter values. This technique helps mitigate overfitting, particularly in sparse datasets, a common issue in recommendation systems. In the <code>recosystem</code> package, L2 regularisation is applied to both user and item latent factors by adjusting the <code>costp_l2</code> and <code>costq_l2</code> parameters during model training. These parameters regulate the strength of regularisation for the user and item factors, respectively.</p>
+<p>A grid search was conducted to determine the optimal combination of <code>costp_l2</code> and <code>costq_l2</code> values that would minimise the RMSE for the predictions.</p>
 <p>The following values were tested:</p>
 <ul>
-<li><p><code>costp_l2</code>: 0.001, 0.01, 0.1, 0.5, 0.6, 0.8, 1</p></li>
-<li><p><code>costq_l2</code>: 0.001, 0.01, 0.1, 0.5, 0.6, 0.8, 1</p></li>
+<li><code>costp_l2</code>: 0.001, 0.01, 0.1, 0.5, 0.6, 0.8, 1</li>
+<li><code>costq_l2</code>: 0.001, 0.01, 0.1, 0.5, 0.6, 0.8, 1</li>
 </ul>
-<p>This approach allowed us to identify the best regularisation settings to improve prediction accuracy and prevent overfitting.</p>
+<p>This method enabled the identification of the most effective regularisation settings to enhance prediction accuracy and prevent overfitting.</p>
 <p>The best combination of hyperparameters were a <code>costp_l2</code> of 0.5 and a <code>costq_l2</code> of 0.01, which resulted in a RMSE of ~1.83.</p>
 <p>This combination was selected for the final model with L2 regularisation to generate predictions.</p>
 </section>
 </section>
 <section id="user-based-collaborative-filtering-1" class="level2">
 <h2 class="anchored" data-anchor-id="user-based-collaborative-filtering-1">User-Based Collaborative Filtering</h2>
-<p>To calculate user similarities, we first converted our ratings matrix into a wide format, where each row represented a user (User.ID) and each column represented a book (ISBN).</p>
-<p>Recognising that users have different rating habits, with some users rating consistently higher or lower than others, we applied mean-centering to standardise the data. Without this normalisation, users with similar preferences might appear dissimilar due to these differences in rating styles. By using mean-centering, we adjusted the ratings to reflect how much a user liked or disliked a book <strong>relative to their own average</strong>. This prepared the data for computing the users’ cosine similarity, ensuring that it captured users’ true preferences and enabled more accurate recommendations.</p>
-<p>We replaced any <code>NA</code> values, representing missing ratings for a given book, with zero. This step was necessary because cosine similarity cannot handle missing values. The matrix was then converted into a sparse format, which is more computationally efficient when working with matrices that contain a large number of zero values.</p>
-<p>Finally, we calculated cosine similarities between users based on their book ratings using the <code>simil()</code> function from the <code>proxyC</code> package, which is well-suited for efficiently handling sparse matrices. The user similarities sparse matrix was converted to a dense matrix, to allow for easy computation and predictions later.</p>
+<p>To compute user similarities, the ratings matrix was first converted into a wide format, where each row corresponded to a user (User.ID) and each column represented a book (ISBN).</p>
+<p>Given that users exhibit different rating tendencies, with some consistently assigning higher or lower ratings, mean-centering was applied to standardise the data. Without this normalisation, users with similar preferences could appear dissimilar due to variations in their rating styles. Mean-centering adjusted the ratings to reflect how much a user liked or disliked a book <strong>relative to their own average</strong>, thereby aligning their rating patterns. This step ensured the data was appropriately prepared for calculating cosine similarity between users, capturing their true preferences and facilitating more accurate recommendations.</p>
+<p>Any <code>NA</code> values, representing missing ratings for a given book, were replaced with zero. This step was essential, as cosine similarity cannot process missing values. Following this, the matrix was converted into a sparse format, which is more computationally efficient when dealing with matrices that contain a high proportion of zero values.</p>
+<p>Cosine similarities between users, based on their book ratings, were calculated using the <code>simil()</code> function from the <code>proxyC</code> package, which is optimised for efficiently handling sparse matrices. The resulting user similarities sparse matrix was then converted into a dense matrix to facilitate easier computation and predictions in subsequent steps.</p>
 <section id="predictions" class="level3">
 <h3 class="anchored" data-anchor-id="predictions">Predictions</h3>
-<p>To assess the UB collaborative filtering model’s predictions, we chose to make predictions on the same test set used in the collaborative filtering model with matrix factorisation. We created a function to calculate the user-based predicted rating, while adjusting for each user’s average rating.</p>
-<p>In the function, we first retrieve the cosine similarity scores for the target user and standardise them so they sum to one, but only across users who have rated the specific book. The predicted rating for the book is then calculated as a weighted sum of the ratings given by other users, with the weights being the standardised similarity scores. Finally, the predicted rating is adjusted by adding the user’s average rating to bring it back to the original scale.</p>
-<p>This approach ensured that both user similarities and individual rating tendencies are considered when making predictions.</p>
-<p>We then applied the function across the same test used in the collaborative filtering with matrix factorisation model.</p>
+<p>To evaluate the predictions of the user-based collaborative filtering model, predictions were made on the same test set used in the matrix factorisation model. A function was created to calculate the user-based predicted rating while accounting for each user’s average rating.</p>
+<p>Within the function, the cosine similarity scores for the target user were first retrieved and then standardised so that they summed to one, but only across users who had rated the specific book. The predicted rating for the book was computed as a weighted sum of the ratings provided by other users, with the weights corresponding to the standardised similarity scores. To return the prediction to its original scale, the user’s average rating was added to the result.</p>
+<p>This approach ensured that both user similarities and individual rating patterns were accounted for when generating predictions.</p>
+<p>The function was then applied to the same test set used in the collaborative filtering model with matrix factorisation.</p>
 </section>
 </section>
 <section id="item-based-collaborative-filtering-1" class="level2">
 <h2 class="anchored" data-anchor-id="item-based-collaborative-filtering-1">Item-Based Collaborative Filtering</h2>
-<p>To calculate item similarities, we first converted our ratings matrix into a wide format, where each row represented a book (ISBN) and each column represented a user (User.ID).</p>
-<p>Recognising that books may receive different ratings from various users, we applied mean-centering to standardise the data. Without this normalisation, books with similar popularity might appear dissimilar due to differences in user rating styles. By using mean-centering, we adjusted the ratings to reflect how well a book was rated relative to its average rating across users. This prepared the data for computing the items’ cosine similarity, ensuring that it captured each book’s true popularity and enabled more accurate recommendations.</p>
-<p>We replaced any NA values, representing missing ratings for a given user, with zero. This step was necessary because cosine similarity cannot handle missing values. The matrix was then converted into a sparse format, which is more computationally efficient when working with matrices that contain a large number of zero values.</p>
-<p>Finally, we calculated cosine similarities between books based on their ratings from users using the simil() function from the proxyC package, which is well-suited for efficiently handling sparse matrices. The item similarities sparse matrix was converted to a dense matrix to allow for easier computation and predictions later.</p>
+<p>To compute item similarities, the ratings matrix was first transformed into a wide format, where each row represented a book (ISBN) and each column represented a user (User.ID).</p>
+<p>Given that books may receive varying ratings from different users, mean-centering was applied to standardise the data. Without this normalisation, books with similar levels of popularity could appear dissimilar due to differences in user rating habits. By applying mean-centering, the ratings were adjusted to reflect how well a book was rated relative to its average rating across all users. This step ensured that the data was properly prepared for calculating cosine similarity between items, capturing each book’s true popularity and enabling more accurate recommendations.</p>
+<p>Any <code>NA</code> values, representing missing ratings for a given user, were replaced with zero. This step was essential as cosine similarity cannot process missing values. The matrix was then transformed into a sparse format, improving computational efficiency when working with matrices containing a significant number of zero values.</p>
+<p>Cosine similarities between books, based on their ratings from users, were calculated using the <code>simil()</code> function from the <code>proxyC</code> package, which is optimised for efficiently handling sparse matrices. The resulting item similarities sparse matrix was then converted into a dense matrix to facilitate easier computation and predictions in subsequent steps.</p>
 <section id="predictions-1" class="level3">
 <h3 class="anchored" data-anchor-id="predictions-1">Predictions</h3>
-<p>To assess the IB collaborative filtering model’s predictions, we chose to make predictions on the same test set used in the collaborative filtering model with matrix factorisation. We created a function to calculate the user-based predicted rating, while adjusting for each user’s average rating.</p>
-<p>In the function, we first retrieve the cosine similarity scores for the target user and standardise them so they sum to one, but only across users who have rated the specific book. The predicted rating for the book is then calculated as a weighted sum of the ratings given by other users, with the weights being the standardised similarity scores. Finally, the predicted rating is adjusted by adding the user’s average rating to bring it back to the original scale.</p>
-<p>This approach ensured that both user similarities and individual rating tendencies are considered when making predictions.</p>
-<p>We then applied the function across the same test used in the collaborative filtering with matrix factorisation model.</p>
+<p>To evaluate the item-based (IB) collaborative filtering model’s predictions, the same test set used for the matrix factorisation model was employed. A function was developed to calculate the predicted rating for each user, while adjusting for the user’s average rating.</p>
+<p>The function first retrieved the cosine similarity scores for the target item and standardised them so that they summed to one, but only across items that had been rated by the specific user. The predicted rating for the item was then calculated as a weighted sum of the ratings provided for similar items, with the weights determined by the standardised similarity scores. Finally, the predicted rating was adjusted by adding the user’s average rating to return it to the original scale.</p>
+<p>This approach ensured that both item similarities and individual rating tendencies were accounted for when generating predictions.</p>
+<p>The function was subsequently applied to the same test set used in the matrix factorisation-based collaborative filtering model.</p>
 </section>
 </section>
 <section id="ensemble-model" class="level2">
 <h2 class="anchored" data-anchor-id="ensemble-model">Ensemble model</h2>
-<p>As our last model we built an ensemble model which averages the predictions from the user-based, item-based and the matrix factorisation model (with regularisation) on the condition that the predictions are only considered if they fall within the range of 1 and 10 (inclusive), i.e.&nbsp;the predictions are valid. .</p>
+<p>The final model was an ensemble, which averaged the predictions from the user-based, item-based, and matrix factorisation models (without regularisation). Predictions were only included in the averaging process if they fell within the (valid) range of 1 to 10 (inclusive).</p>
+</section>
+<section id="accuracy-assessment" class="level2">
+<h2 class="anchored" data-anchor-id="accuracy-assessment">Accuracy assessment</h2>
+<p>The predictions from the five models were compared with the actual values, and their accuracy was assessed using mean squared error (MSE) and root mean squared error (RMSE) as evaluation metrics.</p>
 </section>
 </section>
 <section id="results" class="level1">
 <h1>Results</h1>
-<section id="accuracy-assessment" class="level2">
-<h2 class="anchored" data-anchor-id="accuracy-assessment">Accuracy assessment</h2>
-<section id="collaborative-filtering-with-matrix-factorisation-model---without-regularisation-term" class="level3">
-<h3 class="anchored" data-anchor-id="collaborative-filtering-with-matrix-factorisation-model---without-regularisation-term">Collaborative filtering with matrix factorisation model - Without regularisation term</h3>
-</section>
-<section id="collaborative-filtering-with-matrix-factorisation-model---with-regularisation-term" class="level3">
-<h3 class="anchored" data-anchor-id="collaborative-filtering-with-matrix-factorisation-model---with-regularisation-term">Collaborative filtering with matrix factorisation model - With regularisation term</h3>
-</section>
-<section id="user-based-collaborative-filtering-2" class="level3">
-<h3 class="anchored" data-anchor-id="user-based-collaborative-filtering-2">User-Based Collaborative filtering</h3>
-</section>
-<section id="item-based-collaborative-filtering-2" class="level3">
-<h3 class="anchored" data-anchor-id="item-based-collaborative-filtering-2">Item-Based Collaborative filtering</h3>
-</section>
-<section id="ensemble-model-1" class="level3">
-<h3 class="anchored" data-anchor-id="ensemble-model-1">Ensemble model</h3>
-</section>
-</section>
+<p>The accuracy results have been represented in <em>Table 1</em> below, along with a summary of the key insights.</p>
+<ol type="1">
+<li><p><strong>CF with MF (without regularisation):</strong> The matrix factorisation model without regularisation performs reasonably well, but the absence of regularisation may lead to overfitting. This can cause the model to perform better on training data but slightly worse on unseen data compared to regularised models.</p></li>
+<li><p><strong>CF with MF (with regularisation):</strong> The inclusion of L2 regularisation marginally improves the performance, reducing both MSE and RMSE. This suggests that regularisation helps prevent overfitting, allowing the model to generalise better to unseen data by penalising overly complex latent factors.</p></li>
+<li><p><strong>User-based CF:</strong> The user-based collaborative filtering model performs significantly worse compared to the matrix factorisation models. The high MSE and RMSE indicate that this approach might struggle to capture the complex relationships between users and books, especially in cases of sparse data.</p></li>
+<li><p><strong>Item-based CF:</strong> The item-based collaborative filtering model performs poorly, with a dramatically higher MSE and RMSE compared to other methods. This suggests that item similarity is not as effective in predicting ratings in this dataset, likely due to the large number of sparse entries or poor similarity measures among items.</p></li>
+<li><p><strong>Ensemble Model:</strong> The ensemble model, which averages predictions from the user-based, item-based, and matrix factorisation models, performs the best overall. Its MSE and RMSE are the lowest, indicating that combining the strengths of different models results in improved prediction accuracy. The ensemble approach seems to balance the shortcomings of individual models, especially the weaknesses of user-based and item-based collaborative filtering.</p></li>
+</ol>
+<p>In summary:</p>
+<ul>
+<li>The <strong>ensemble model</strong> outperforms all other approaches, demonstrating that a combined approach leads to more accurate predictions.</li>
+<li><strong>Matrix factorisation with regularisation</strong> is the second-best performing model, as it effectively generalises the data and avoids overfitting.</li>
+<li><strong>User-based</strong> and especially <strong>item-based collaborative filtering</strong> perform poorly, highlighting the limitations of these traditional techniques, particularly in datasets with sparsity or diverse rating patterns.</li>
+</ul>
 </section>
 <section id="discussion" class="level1">
 <h1>Discussion</h1>
+<p>The results of the five collaborative filtering models highlight significant differences in performance across the methods implemented. Each model offers its own unique strengths and weaknesses, and the results provide insights into the effectiveness of different recommendation techniques, particularly when applied to the specific demographic of young adult readers.</p>
+<section id="matrix-factorisation-models" class="level2">
+<h2 class="anchored" data-anchor-id="matrix-factorisation-models">Matrix Factorisation Models</h2>
+<p>The matrix factorisation models demonstrated solid performance in both the regularised and non-regularised model forms. The model without regularisation achieved a Root Mean Squared Error (RMSE) of <strong>1.84</strong>, but with the introduction of L2 regularisation, the RMSE was reduced to <strong>1.82</strong>. This small improvement illustrates the benefit of regularisation in preventing overfitting by discouraging overly complex latent factors.</p>
+<p>The ability of matrix factorisation to capture latent relationships between users and books makes it particularly effective in handling sparse data, a common challenge in recommender systems. However, the relatively small improvement with regularisation suggests that the model may already be robust, or that the dataset used does not suffer significantly from overfitting. Future work could explore different types of regularisation or deeper grid searches to optimise hyperparameters more precisely.</p>
 </section>
-<section id="recommendations" class="level1">
-<h1>Recommendations</h1>
+<section id="user-based-collaborative-filtering-2" class="level2">
+<h2 class="anchored" data-anchor-id="user-based-collaborative-filtering-2">User-Based Collaborative Filtering</h2>
+<p>User-based collaborative filtering (UBCF) performed notably worse compared to the matrix factorisation models, with an RMSE of <strong>3.43</strong>. This result is expected, as UBCF relies heavily on the availability of dense user interactions. In the presence of sparse data, UBCF can struggle to identify meaningful relationships between users, especially in a dataset like this, where only a small proportion of users have rated a large number of books.</p>
+<p>Additionally, user-based approaches can be more susceptible to issues of variability in individual rating behaviour, which can distort predictions. Despite applying mean-centering to standardise user ratings, the model still struggled to capture the full complexity of user preferences.</p>
+</section>
+<section id="item-based-collaborative-filtering-2" class="level2">
+<h2 class="anchored" data-anchor-id="item-based-collaborative-filtering-2">Item-Based Collaborative Filtering</h2>
+<p>The item-based collaborative filtering (IBCF) model yielded the worst performance with a significantly higher RMSE of <strong>62.14</strong>. This high error indicates that item-based similarities were not sufficient to generate accurate predictions in this dataset. One possible explanation is that the dataset may contain too many sparsely-rated books, leading to inaccurate similarity calculations between items.</p>
+<p>This method could benefit from further data preprocessing such as only including books that have a ratings count above a certain threshold.</p>
+</section>
+<section id="ensemble-model-1" class="level2">
+<h2 class="anchored" data-anchor-id="ensemble-model-1">Ensemble Model</h2>
+<p>The ensemble model, which averaged predictions from the user-based, item-based, and matrix factorisation models, performed the best overall, achieving an RMSE of <strong>1.19</strong>. This result suggests that the ensemble approach successfully combined the strengths of each model, mitigating their individual weaknesses. By leveraging the power of multiple collaborative filtering techniques, the ensemble model was able to provide more accurate predictions than any individual model alone.</p>
+<p>One reason for this success could be that the ensemble model effectively balances the over-reliance on latent factors in matrix factorisation with the direct similarity measures in user- and item-based filtering. This highlights the advantage of using ensemble methods in recommender systems, as they can provide more robust predictions by incorporating diverse approaches.</p>
+</section>
+</section>
+<section id="limitations-and-recommendations" class="level1">
+<h1>Limitations and recommendations</h1>
+<p>Despite the success of the ensemble model, there are several limitations to this analysis. The most significant challenge was the sparsity of the dataset, with a large proportion of books and users having very few ratings. This affected the performance of both user-based and item-based collaborative filtering.</p>
+<p>Another potential limitation is the relatively basic hyperparameter tuning process used for the matrix factorisation model. While L2 regularisation improved performance, a more extensive grid search could yield further improvements.</p>
 </section>
 <section id="conclusion" class="level1">
 <h1>Conclusion</h1>
+<p>In conclusion, the results demonstrate the power of ensemble models in creating robust recommender systems, particularly when combining collaborative filtering approaches. Future work could expand on this by incorporating additional data sources, experimenting with more advanced algorithms, and fine-tuning model parameters to further enhance performance.</p>
 </section>
 <section id="references" class="level1">
 <h1>References</h1>

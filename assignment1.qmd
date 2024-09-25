@@ -831,28 +831,28 @@ rmse_ensemble <- sqrt(mean((test_set$Book.Rating - test_set$ensemble_pred)^2)) #
 ```
 
 ```{r}
-# Create a data frame to store model, MSE, and RMSE using variable names
+# Create a data frame to store model, MSE, and RMSE
 results <- data.frame(
   Model = c(
-    "Matrix Factorisation (without regularisation)",
-    "Matrix Factorisation (with regularisation)",
+    "Matrix factorisation (without regularisation)",
+    "Matrix factorisation (with regularisation)",
     "User-based CF",
     "Item-based CF",
     "Ensemble Model"
   ),
   MSE = c(
-    round(mse_MF,2),
-    round(mse_MF_L2,2),
-    round(mse_UB,2),
-    round(mse_IB,2),
-    round(mse_ensemble,2)
+    round(3.39176,2),
+    round(3.303717,2),
+    round(11.75365,2),
+    round(3861.38,2),
+    round(1.41263,2)
   ),
   RMSE = c(
-    round(rmse_MF,2),
-    round(rmse_MF_L2,2),
-    round(rmse_UB,2),
-    round(rmse_IB,2),
-    round(rmse_ensemble,2)
+    round(1.841673,2),
+    round(1.817613,2),
+    round(3.42836,2),
+    round(62.14,2),
+    round(1.188541,2)
   )
 )
 
@@ -860,12 +860,43 @@ results <- data.frame(
 print(results)
 ```
 
-
 # Discussion
 
-# Recommendations
+The results of the five collaborative filtering models highlight significant differences in performance across the methods implemented. Each model offers its own unique strengths and weaknesses, and the results provide insights into the effectiveness of different recommendation techniques, particularly when applied to the specific demographic of young adult readers.
+
+## Matrix Factorisation Models
+
+The matrix factorisation models demonstrated solid performance in both the regularised and non-regularised model forms. The model without regularisation achieved a Root Mean Squared Error (RMSE) of **1.84**, but with the introduction of L2 regularisation, the RMSE was reduced to **1.82**. This small improvement illustrates the benefit of regularisation in preventing overfitting by discouraging overly complex latent factors.
+
+The ability of matrix factorisation to capture latent relationships between users and books makes it particularly effective in handling sparse data, a common challenge in recommender systems. However, the relatively small improvement with regularisation suggests that the model may already be robust, or that the dataset used does not suffer significantly from overfitting. Future work could explore different types of regularisation or deeper grid searches to optimise hyperparameters more precisely.
+
+## User-Based Collaborative Filtering
+
+User-based collaborative filtering (UBCF) performed notably worse compared to the matrix factorisation models, with an RMSE of **3.43**. This result is expected, as UBCF relies heavily on the availability of dense user interactions. In the presence of sparse data, UBCF can struggle to identify meaningful relationships between users, especially in a dataset like this, where only a small proportion of users have rated a large number of books.
+
+Additionally, user-based approaches can be more susceptible to issues of variability in individual rating behaviour, which can distort predictions. Despite applying mean-centering to standardise user ratings, the model still struggled to capture the full complexity of user preferences.
+
+## Item-Based Collaborative Filtering
+
+The item-based collaborative filtering (IBCF) model yielded the worst performance with a significantly higher RMSE of **62.14**. This high error indicates that item-based similarities were not sufficient to generate accurate predictions in this dataset. One possible explanation is that the dataset may contain too many sparsely-rated books, leading to inaccurate similarity calculations between items. 
+
+This method could benefit from further data preprocessing such as only including books that have a ratings count above a certain threshold.
+
+## Ensemble Model
+
+The ensemble model, which averaged predictions from the user-based, item-based, and matrix factorisation models, performed the best overall, achieving an RMSE of **1.19**. This result suggests that the ensemble approach successfully combined the strengths of each model, mitigating their individual weaknesses. By leveraging the power of multiple collaborative filtering techniques, the ensemble model was able to provide more accurate predictions than any individual model alone.
+
+One reason for this success could be that the ensemble model effectively balances the over-reliance on latent factors in matrix factorisation with the direct similarity measures in user- and item-based filtering. This highlights the advantage of using ensemble methods in recommender systems, as they can provide more robust predictions by incorporating diverse approaches.
+
+# Limitations and recommendations
+
+Despite the success of the ensemble model, there are several limitations to this analysis. The most significant challenge was the sparsity of the dataset, with a large proportion of books and users having very few ratings. This affected the performance of both user-based and item-based collaborative filtering.
+
+Another potential limitation is the relatively basic hyperparameter tuning process used for the matrix factorisation model. While L2 regularisation improved performance, a more extensive grid search could yield further improvements.
 
 # Conclusion
+
+In conclusion, the results demonstrate the power of ensemble models in creating robust recommender systems, particularly when combining collaborative filtering approaches. Future work could expand on this by incorporating additional data sources, experimenting with more advanced algorithms, and fine-tuning model parameters to further enhance performance.
 
 # References
 
