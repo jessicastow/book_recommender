@@ -143,13 +143,13 @@ library(Matrix)
 library(proxyC)
 ```
 
-There were no duplicate entries found in any of the datasets.
+No duplicate entries were identified in any of the datasets.
 
-The `Books` dataset contains information for 271 360 books, with all of these books being unique based on their ISBN.
+The `Books` dataset contains information on 271,360 unique books, distinguished by their ISBNs.
 
-The `Users` dataset contains information for 278 858 users, with all of these users being unique based on their user IDs.
+The `Users` dataset includes details for 278,858 unique users, identified by their user IDs.
 
-The `Ratings` dataset contains information for 1 149 780 ratings. For this dataset we found that 105 283 unique users gave ratings (both explicit and implicit), this accounts for approximately 38% of the total user base. Interestingly, these users rated 340 556 books, which exceeds the number of books listed in the `Books` dataset.
+The `Ratings` dataset consists of 1,149,780 ratings. Within this dataset, 105,283 unique users provided ratings (both explicit and implicit), representing approximately 38% of the total user base. Interestingly, these users rated 340,556 books, a number that exceeds the total listed in the `Books` dataset.
 
 ```{r}
 # read in data
@@ -189,13 +189,13 @@ length(unique(ratings$ISBN)) # 340 556
 
 ## Univariate analysis
 
-We decided to investigate the following variables: user age and book ratings.
+The investigation focused on two key variables: user age and book ratings.
 
-We chose not to explore user location or additional book details, as they were not relevant to the objectives of this recommender system exercise.
+User location and additional book details were excluded from the analysis, as they were deemed irrelevant to the objectives of this recommender system exercise.
 
 ### User Age
 
-User ages ranged from 0 to 244 years, with a mean of 35 and a median of 32. This range presents significant issues, as it's unrealistic for users to be 0 or 244 years old. These outliers likely result from data entry errors. Excluding these extreme values reveals that the age distribution is generally symmetrical and uniform.
+User ages ranged from 0 to 244 years, with a mean of 35 and a median of 32. This wide range presents significant issues, as it is implausible for users to be 0 or 244 years old. These outliers are likely due to data entry errors. After excluding these extreme values, the age distribution appears largely symmetrical and uniform.
 
 ```{r include=TRUE}
 # USERS -----------------------------------------------------------------------
@@ -216,7 +216,7 @@ boxplot(users$Age,
 
 ### Book ratings
 
-Book ratings ranged from 0 to 10. A rating of 0 indicated an implicit interaction, meaning the user may have read or interacted with the book but did not explicitly rate it. Ratings from 1 to 10 were explicit, representing direct user input. As shown in *Figure 2* below, the majority of ratings were implicit, which will be less useful for our recommender system moving forward.
+Book ratings ranged from 0 to 10, with a rating of 0 signifying an implicit interaction, indicating that the user may have read or interacted with the book without providing an explicit rating. Ratings between 1 and 10 were explicit, reflecting direct user input. As illustrated in *Figure 2* below, the majority of ratings were implicit, which will be less valuable for our recommender system as we proceed.
 
 ```{r include=TRUE}
 # RATINGS -----------------------------------------------------------------------
@@ -243,7 +243,7 @@ axis(1, at = 0:10, labels = 0:10)
 
 ### Ratings by user
 
-We observed that one user (ID 11676) rated an impressive 13 607 books, which is significantly higher than the average of just 10 book ratings per user. When we investigated this user we noted that there is no location or age information available for them
+It was observed that one user (ID 11676) rated an impressive 13,607 books, a figure significantly higher than the average of just 10 book ratings per user. Upon further investigation, it was noted that this user did not provide any location or age information.
 
 ```{r}
 # which users rated the most books?
@@ -307,7 +307,7 @@ head(book_avg_ratings, 10)
 
 ### Ratings
 
-We decided to drop the implicit ratings (ratings equal to 0) as these are not useful in the building of our recommender model. We also chose to only keep books with 5 or more ratings to exclude books that are rarely read.
+Implicit ratings (those equal to 0) were excluded, as they are not useful for building the recommender model. Additionally, only books with 5 or more ratings were retained, in order to exclude books that are rarely read.
 
 ```{r}
 ratings <- ratings %>%
@@ -319,7 +319,7 @@ ratings <- ratings %>%
 nrow(ratings) # 199 477 rows, therefore 950 303 rows (83% of the data) dropped
 ```
 
-We also chose to retain user ratings only for those who had rated 10 or more books (i.e., users who rated at least the average number of books). This approach ensures that we focus on active readers, providing a more reliable understanding of their preferences. These filtering methods resulted in a ratings data frame with 111 008 rows, meaning 1 038 772 observations (\~90% of our ratings data) was dropped.
+User ratings were further filtered to include only those from users who had rated 10 or more books (i.e., users who rated at least the average number of books). This approach ensured a focus on active readers, providing a more reliable understanding of their preferences. After applying these filtering methods, the resulting ratings data frame contained 111 008 rows, meaning approximately 1 million observations (~90% of the original ratings data) were excluded.
 
 ```{r}
 # only keep ratings when users have rated 10 or more books
@@ -331,7 +331,7 @@ ratings <- ratings %>%
 
 ### Users
 
-We decided to only investigate the user preferences of young adults between the ages of 18 and 25 (inclusive). All other ages were dropped from the data frame. We also decided to exclude the user location information as this was not helpful to our recommender model building.
+The analysis was narrowed to focus on the preferences of young adults between the ages of 18 and 25 (inclusive), with all other age groups excluded from the data frame. Additionally, user location information was discarded, as it did not contribute meaningfully to the recommender model development.
 
 ```{r}
 users <- users %>%
@@ -341,9 +341,9 @@ users <- users %>%
 
 ### Books
 
-We ensured that all books had a title. We then investigated the instances where the Year of Publication contained non-numeric values, as this would prevent converting the column to an integer. We found that for three books, the Book Author and Year of Publication fields had been mistakenly swapped. To address this, we implemented a solution to correct the swapped information. We then turned the year of publication column into a type integer.
+It was ensured that all books had a title. An investigation was conducted into instances where the Year of Publication field contained non-numeric values, as this would prevent converting the column to an integer. It was discovered that, for three books, the Book Author and Year of Publication fields had been mistakenly swapped. This issue was resolved by correcting the swapped information. The Year of Publication column was then converted to an integer type.
 
-We kept the ISBN, book title, author and year of publication information and dropped the publisher and image URLs from the `books` data frame.
+The ISBN, book title, author, and year of publication information were retained, while the publisher and image URLs were removed from the `books` data frame.
 
 ```{r}
 sum(is.na(books$Book.Title)) # all books have a title
@@ -364,9 +364,9 @@ books <- books %>%
 
 ### Joining of data frames
 
-The `Books` data frame was merged with the `Ratings` data frame using a left join on the common variable`ISBN`. This ensured that all the ratings information was retained while adding the corresponding book titles and authors to the data set.
+The `Books` data frame was merged with the `Ratings` data frame using a left join on the common variable `ISBN`. This approach ensured that all ratings information was retained while adding the corresponding book titles and authors to the dataset.
 
-To address the earlier discrepancy where more books were rated than were listed in the `Books` data frame, we checked for any missing book titles. We found that 7 249 ratings lacked corresponding book titles or any other associated information. As a result, we opted to remove these ratings from the data frame.
+To resolve the earlier discrepancy, where more books were rated than were listed in the `Books` data frame, a check was performed for missing book titles. It was found that 7249 ratings lacked corresponding book titles or any associated information. Consequently, these ratings were removed from the data frame.
 
 ```{r}
 # left join books to ratings df and rename it "ratings_books"
@@ -381,7 +381,7 @@ ratings_books <- ratings_books %>%
   filter(!is.na(Book.Title))
 ```
 
-We then merged the user information into the new data frame using a left join, matching on the shared user IDs. The left join was chosen to ensure that all data related to the books and their ratings remained intact. We then noted that we now had 97 202 ratings without age information which had to be dropped.
+The user information was then merged into the new data frame using a left join, matching on the shared user IDs. A left join was selected to ensure that all data related to the books and their ratings remained intact. Following this, it was noted that 97 202 ratings lacked age information and, as a result, these records were removed from the data frame.
 
 ```{r}
 ratings_books_users <- ratings_books %>%
@@ -436,19 +436,19 @@ train_set <- mf[train_indices, ]
 test_set <- mf[-train_indices, ]
 ```
 
-To use the `recosystem` package for matrix factorisation, we need to convert the training and testing data into a format that the package can process. This is done by using the `data_memory()` function, which transforms the data into memory-efficient objects that `recosystem` can work with.
+To apply the `recosystem` package for matrix factorisation, the training and testing data must be converted into a format compatible with the package. This is achieved using the `data_memory()` function, which transforms the data into memory-efficient objects that `recosystem` can process.
 
 **For the training data:**
 
--   We specify the `user_index` (the user ID), `item_index` (the ISBN for each book), and the rating (the actual rating given by the user).
+-   The `user_index` (user ID), `item_index` (ISBN for each book), and the rating (the actual rating provided by the user) are specified.
 
--   This creates a memory-based data object that links users, books, and ratings, which will be used to train the model.
+-   This establishes a memory-based data object that connects users, books, and ratings, which is then utilised for model training.
 
 **For the testing data:**
 
--   A similar process was applied, but with the test set. The `user_index` and `item_index` were specified along with the rating, allowing for evaluation of the model's performance on unseen data.
+-   A similar process was applied to the test set. The `user_index` and `item_index` were specified along with the actual ratings, enabling the evaluation of the model's performance on unseen data.
 
--   The training set comprised 8,614 observations, which were utilised to train the model. 
+-   The training set comprised 8614 observations, which were utilised to train the model. 
 
 ```{r}
 # Prepare the training and testing data for recosystem
