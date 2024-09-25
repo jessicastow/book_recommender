@@ -1,12 +1,15 @@
 ---
-title: "Assignment 1: Recommender Systems"
+title: "Book Recommendation System for Young Adults"
 author: "Jessica Stow (STWJES003@MYUCT.AC.ZA)"
-date: "September 2024"
-format: 
-  html: 
-    fig-width: 8
-    fig-height: 4
-    code-fold: true
+date: "25 September 2024"
+output: 
+  html_document:
+    fig_width: 8
+    fig_height: 4
+    code_folding: true
+  pdf_document:
+    fig_width: 8
+    fig_height: 4
 ---
 
 # View this report on my GitHub profile!
@@ -123,7 +126,8 @@ The dataset consists of three files:
 knitr::opts_chunk$set(echo = FALSE,
                       error = FALSE,
                       include = FALSE,
-                      warning = FALSE)
+                      warning = FALSE, 
+                      cache = TRUE)
 ```
 
 ```{r}
@@ -407,26 +411,24 @@ datatable(
 
 ## Collaborative filtering with matrix factorisation
 
-Matrix factorisation was implemented using the `recosystem` package. To prepare the data in the required format, we structured the ratings dataset so that each row represented a unique rating, with columns for the user ID, book ISBN, book title, and rating score. It was necessary to convert both the user IDs and book ISBNs into factors, as the matrix factorisation model in recosystem relies on categorical encoding of users and items. This step ensured that the model could properly identify and differentiate between users and books.
+Matrix factorisation was implemented using the `recosystem` package. To prepare the data in the required format, we structured the ratings dataset so that each row represented a unique rating, with columns for the user ID, book ISBN, book title, and rating score. It was necessary to convert both the user IDs and book ISBNs into factors, as the matrix factorisation model in `recosystem` relies on categorical encoding of users and items. This step ensured that the model could properly identify and differentiate between users and books.
 
 ```{r}
-# in order to do matrix factorisation we need to make the user IDs and ISBNs as factors
+# in order to do matrix factorisation we need to make the user IDs and ISBNs factors
 mf <- ratings_books_users %>%
   select(User.ID, ISBN, Book.Title, Book.Rating) %>%
   mutate(User.ID = as.factor(User.ID)) %>%
-  mutate(Book.Title = as.factor(ISBN)) 
+  mutate(ISBN = as.factor(ISBN)) 
 ```
 
 After preparing the data, we initialised a matrix factorisation model using the `recosystem` package by creating an instance of the Reco() object. This object serves as the model that will be trained on our data to learn user-item interactions.
 
-```{r}
-# Initialise the recosystem object
-r <- Reco()
-```
-
 Next, we split the data into training and test sets to evaluate the model’s performance. We used an 80/20 split, where 80% of the data was randomly selected for training and the remaining 20% was used for testing. To ensure reproducibility (so that the same random split can be generated each time the code is run), we set a random seed.
 
 ```{r}
+# Initialise the recosystem object
+r <- Reco()
+
 # Create train and test sets 
 set.seed(123)  # For reproducibility
 train_indices <- sample(nrow(mf), size = 0.8 * nrow(mf))
@@ -445,6 +447,26 @@ To use the `recosystem` package for matrix factorisation, we need to convert the
 **For the testing data:**
 
 -   A similar process is applied, but with the test set. The `user_index` and `item_index` are specified along with the rating, allowing us to evaluate the model's performance on unseen data.
+
+
+
+```{r}
+# Prepare the training and testing data for recosystem
+
+# training data 
+train_data <- data_memory(
+  user_index = train_set$User.ID, 
+  item_index = train_set$ISBN, 
+  rating = train_set$Book.Rating
+)
+
+# testing data
+test_data <- data_memory(
+  user_index = test_set$User.ID, 
+  item_index = test_set$ISBN, 
+  rating = test_set$Book.Rating
+)
+```
 
 We then performed collaborative filtering with matrix factorisation both with and without a regularisation term.
 
@@ -507,7 +529,7 @@ for (costp_l2 in costp_l2_values) {
 }
 ```
 
-The best combination of hyperparameters were a `costp_l2` of 0.5 and a `costq_l2` of 0.1, which resulted in a RMSE of 1.803844. 
+The best combination of hyperparameters were a `costp_l2` of 0.5 and a `costq_l2` of 0.01, which resulted in a RMSE of ~1.83. 
 
 ```{r}
 # Find the best hyperparameters
@@ -520,7 +542,7 @@ This combination was selected for the final model with L2 regularisation to gene
 ```{r}
 r$train(train_data, opts = list(
   costp_l2 = 0.5,  # Regularisation for user factors
-  costq_l2 = 0.001))  # Regularisation for item factors
+  costq_l2 = 0.01))  # Regularisation for item factors
 
 # Predict on the test set
 test_set$MF_pred_L2 <- r$predict(test_data)
@@ -585,7 +607,7 @@ user_similarities[1:5, 1:5]
 
 ### Predictions
 
-To assess the model's predictions, we chose to make predictions on the same test set used in the collaborative filtering model with matrix factorisation. We created a function to calculate the user-based predicted rating, while adjusting for each user's average rating.
+To assess the UB collaborative filtering model's predictions, we chose to make predictions on the same test set used in the collaborative filtering model with matrix factorisation. We created a function to calculate the user-based predicted rating, while adjusting for each user's average rating.
 
 In the function, we first retrieve the cosine similarity scores for the target user and standardise them so they sum to one, but only across users who have rated the specific book. The predicted rating for the book is then calculated as a weighted sum of the ratings given by other users, with the weights being the standardised similarity scores. Finally, the predicted rating is adjusted by adding the user’s average rating to bring it back to the original scale.
 
@@ -625,45 +647,124 @@ test_set$UB_pred <- mapply(ub_predict_rating,
 
 ## Item-Based Collaborative Filtering
 
-First we need to compute the similarities between all pairs of book. We can reuse the same code we used to compute user similarities, if we first transpose the books matrix.
+To calculate item similarities, we first converted our ratings matrix into a wide format, where each row represented a book (ISBN) and each column represented a user (User.ID).
+
+Recognising that books may receive different ratings from various users, we applied mean-centering to standardise the data. Without this normalisation, books with similar popularity might appear dissimilar due to differences in user rating styles. By using mean-centering, we adjusted the ratings to reflect how well a book was rated relative to its average rating across users. This prepared the data for computing the items' cosine similarity, ensuring that it captured each book’s true popularity and enabled more accurate recommendations.
 
 ```{r}
-# transpose the matrix
+# Transform ratings matrix into wide format, with books (ISBN) as rows and users (User.ID) as columns
+books_ratings_wide <- ratings_books_users %>%
+   select(User.ID, ISBN, Book.Rating) %>%
+   complete(User.ID, ISBN) %>%
+   pivot_wider(names_from = User.ID, values_from = Book.Rating)
 
-books_user <- ratings_wide
+# Extract book ISBNs to use for row names in books_ratings_wide matrix
+sorted_my_books <- as.character(unlist(books_ratings_wide[, 1]))
 
-books_user_matrix <- as.matrix(books_user)
+# Compute the mean rating for each book
+book_means <- rowMeans(books_ratings_wide[,-1], na.rm = TRUE)
 
-# Replace NAs with 0, as cosine similarity doesn't handle NAs directly
-books_user_matrix[is.na(books_user_matrix)] <- 0
+# Create a book means dictionary
+book_means_dict <- setNames(book_means, sorted_my_books)
 
-# Convert the matrix to a sparse matrix
-books_user_matrix_sparse <- Matrix(books_user_matrix, sparse = TRUE)
+# Subtract the mean rating from each book's ratings (mean-centering)
+books_ratings_wide <- sweep(books_ratings_wide[,-1], 1, book_means, FUN = "-")
 
-# Assuming ratings_matrix_sparse is a sparse matrix (of class dgCMatrix)
+# Convert to matrix
+books_ratings_wide <- as.matrix(books_ratings_wide)
 
-# Compute cosine similarity using proxyC
-item_similarities <- simil(books_user_matrix_sparse, method = "cosine")
+# Assign book titles (ISBNs) to row names of the matrix
+row.names(books_ratings_wide) <- sorted_my_books
+```
 
-# This should be faster than using a dense matrix
+We replaced any NA values, representing missing ratings for a given user, with zero. This step was necessary because cosine similarity cannot handle missing values. The matrix was then converted into a sparse format, which is more computationally efficient when working with matrices that contain a large number of zero values.
 
-# Convert the result to a dense matrix if needed
+```{r}
+# Replace NAs with 0, since cosine similarity doesn't handle NAs directly
+books_ratings_wide[is.na(books_ratings_wide)] <- 0
+
+# Convert the matrix to a sparse matrix for computational efficiency
+books_ratings_wide <- Matrix(books_ratings_wide, sparse = TRUE)
+```
+
+Finally, we calculated cosine similarities between books based on their ratings from users using the simil() function from the proxyC package, which is well-suited for efficiently handling sparse matrices. The item similarities sparse matrix was converted to a dense matrix to allow for easier computation and predictions later.
+
+```{r}
+# Compute cosine similarity between books based on user ratings
+# using proxyC which deals well with sparse matrices
+item_similarities <- simil(books_ratings_wide, method = "cosine")
+
+# Convert the result to a dense matrix
 item_similarities <- as.matrix(item_similarities)
 
 # View the first few rows and columns
 item_similarities[1:5, 1:5]
 ```
 
+### Predictions
+
+To assess the IB collaborative filtering model's predictions, we chose to make predictions on the same test set used in the collaborative filtering model with matrix factorisation. We created a function to calculate the user-based predicted rating, while adjusting for each user's average rating.
+
+In the function, we first retrieve the cosine similarity scores for the target user and standardise them so they sum to one, but only across users who have rated the specific book. The predicted rating for the book is then calculated as a weighted sum of the ratings given by other users, with the weights being the standardised similarity scores. Finally, the predicted rating is adjusted by adding the user’s average rating to bring it back to the original scale.
+
+This approach ensured that both user similarities and individual rating tendencies are considered when making predictions.
+
 ```{r}
-# make predictions
+# Define a function to calculate the user-based predicted rating with user mean adjustment
+ib_predict_rating <- function(user_id, isbn, books_ratings_wide, item_similarities, book_means_dict) {
+  # Get the similarities for the current book
+  stdW <- item_similarities[isbn, ] * !is.na(books_ratings_wide[, user_id]) # only for users that have rated that book
+  
+  # Normalise the similarities (to ensure they sum to 1)
+  stdW <- stdW / sum(stdW, na.rm = TRUE)
+  
+  # Calculate the predicted rating using weighted sum
+  ib_rating <- sum(books_ratings_wide[, user_id] * stdW, na.rm = TRUE) 
+  
+  # Add the book's mean rating to the predicted rating
+  ib_rating_adjusted <- ib_rating + book_means_dict[isbn]
+  
+  return(ib_rating_adjusted)
+}
+```
+
+
+We then applied the function across the same test used in the collaborative filtering with matrix factorisation model.
+
+```{r}
+# Apply the function across the test set dataframe
+test_set$IB_pred <- mapply(ib_predict_rating, 
+                           test_set$User.ID, 
+                           test_set$ISBN, 
+                           MoreArgs = list(books_ratings_wide = books_ratings_wide, 
+                                           item_similarities = item_similarities, 
+                                           book_means_dict = book_means_dict))
 ```
 
 ## Ensemble model
 
-As our last model we built an ensemble model which averages the predictions from the user-based, item-based and the matrix factorisation model (with regularisation). 
+As our last model we built an ensemble model which averages the predictions from the user-based, item-based and the matrix factorisation model (with regularisation) on the condition that the predictions are only considered if they fall within the range of 1 and 10 (inclusive), i.e. the predictions are valid. . 
 
 ```{r}
-test_set$ensemble_pred <- (test_set$MF_pred + test_set$UB_pred)/2 # add the IB model
+# Define a function to compute the ensemble prediction
+ensemble_mean <- function(mf, ub, ib) {
+  # Filter predictions that are between 1 and 10
+  valid_preds <- c(mf, ub, ib)[c(mf, ub, ib) >= 1 & c(mf, ub, ib) <= 10]
+  
+  # If no valid predictions, return NA or another default value (e.g., mean = 5)
+  if (length(valid_preds) == 0) {
+    return(NA)
+  }
+  
+  # Return the mean of the valid predictions
+  return(mean(valid_preds))
+}
+
+# Apply the function row-wise to test set
+test_set$ensemble_pred <- mapply(ensemble_mean, 
+                                 test_set$MF_pred, 
+                                 test_set$UB_pred, 
+                                 test_set$IB_pred)
 ```
 
 
@@ -712,17 +813,28 @@ print(rmse_UB) # 3.42836
 
 ### Item-Based Collaborative filtering
 
+```{r}
+# Assess IB model predictions using MSE and RMSE
+# Calculate MSE
+mse_IB <- mean((test_set$Book.Rating - test_set$IB_pred)^2)
+print(mse_IB) # 3861.38
+
+# Calculate RMSE
+rmse_IB <- sqrt(mean((test_set$Book.Rating - test_set$IB_pred)^2))
+print(rmse_IB) # 62.14
+```
+
 ### Ensemble model
 
 ```{r}
 # Assess accuracy of ensemble model using MSE & RMSE
 # Calculate MSE
 mse_ensemble <- mean((test_set$Book.Rating - test_set$ensemble_pred)^2)
-print(mse_ensemble) 
+print(mse_ensemble) # 1.41263
 
 # Calculate RMSE
 rmse_ensemble <- sqrt(mean((test_set$Book.Rating - test_set$ensemble_pred)^2))
-print(rmse_ensemble) 
+print(rmse_ensemble) # 1.188541
 ```
 
 # Discussion

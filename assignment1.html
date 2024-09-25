@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.555">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Jessica Stow (STWJES003@MYUCT.AC.ZA)">
+<meta name="dcterms.date" content="2024-09-25">
+
+<title>Book Recommendation System for Young Adults</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="assignment1_files/libs/clipboard/clipboard.min.js"></script>
+<script src="assignment1_files/libs/quarto-html/quarto.js"></script>
+<script src="assignment1_files/libs/quarto-html/popper.min.js"></script>
+<script src="assignment1_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="assignment1_files/libs/quarto-html/anchor.min.js"></script>
+<link href="assignment1_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="assignment1_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="assignment1_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="assignment1_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="assignment1_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="assignment1_files/libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<link href="assignment1_files/libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet">
+<script src="assignment1_files/libs/datatables-binding-0.32/datatables.js"></script>
+<script src="assignment1_files/libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<link href="assignment1_files/libs/dt-core-1.13.6/css/jquery.dataTables.min.css" rel="stylesheet">
+<link href="assignment1_files/libs/dt-core-1.13.6/css/jquery.dataTables.extra.css" rel="stylesheet">
+<script src="assignment1_files/libs/dt-core-1.13.6/js/jquery.dataTables.min.js"></script>
+<link href="assignment1_files/libs/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet">
+<script src="assignment1_files/libs/crosstalk-1.2.1/js/crosstalk.min.js"></script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Book Recommendation System for Young Adults</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Jessica Stow (STWJES003@MYUCT.AC.ZA) </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">September 25, 2024</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<hr>
+<section id="view-this-report-on-my-github-profile" class="level1">
+<h1>View this report on my GitHub profile!</h1>
+<p>This report’s repository can be viewed on <a href="https://github.com/jessicastow/book_recommender">my GitHub profile</a>.</p>
+</section>
+<section id="plagiarism-declaration" class="level1">
+<h1>Plagiarism declaration</h1>
+<ul>
+<li><p>I know that plagiarism is wrong.</p></li>
+<li><p>Plagiarism is to use another’s work and pretend that it is one’s own.</p></li>
+<li><p>I have used the required convention for citation and referencing.</p></li>
+<li><p>Each contribution to and quotation in this assignment from the work(s) of other people has been attributed, and has been cited and referenced.</p></li>
+<li><p>This assignment is my own work.</p></li>
+<li><p>I have not allowed, and will not allow, anyone to copy my work with the intention of passing it off as his or her own work.</p></li>
+<li><p>I acknowledge that copying someone else’s assignment or essay, or part of it, is wrong, and declare that this is my own work.</p></li>
+</ul>
+</section>
+<section id="objectives" class="level1">
+<h1>Objectives</h1>
+<p>The objectives of this report were as follows:</p>
+<p>1. Build recommender systems that predict the rating a user will give to a book based on each of:</p>
+<p>a) item-based collaborative filtering,</p>
+<p>b) user-based collaborative filtering, and</p>
+<p>c) matrix factorisation.</p>
+<p>2. Assessment and ensemble model:</p>
+<p>a) Assess the accuracy of the matrix factorisation recommender system, using a single train/test sample.</p>
+<p>b) Assess the accuracy of the matrix factorisation recommender system with and without regularisation.</p>
+<p>c) Create a final model that ensembles the predictions from the three approaches, and then assess the accuracy of the ensemble predictions.</p>
+</section>
+<section id="introduction-to-data-mining-and-recommender-systems" class="level1">
+<h1>Introduction to Data Mining and Recommender Systems</h1>
+<p>Recommender systems utilise data mining techniques to offer personalised suggestions by analysing patterns in user preferences and behaviours (Data Mining: Concepts and Techniques, 2012). The collaborative filtering approach specifically focuses on identifying users with similar tastes or preferences, recommending items based on the opinions and actions of those with shared interests. This method may also take into account a user’s social environment to enhance the relevance of the recommendations.</p>
+<section id="cosine-similarity" class="level2">
+<h2 class="anchored" data-anchor-id="cosine-similarity">Cosine Similarity</h2>
+<p>Cosine similarity is a metric used in both user-based and item-based collaborative filtering to measure how similar two vectors are.</p>
+<p>Given two vectors, <span class="math inline">\(\boldsymbol x\)</span> and <span class="math inline">\(\boldsymbol y\)</span>, the cosine similarity is defined as:</p>
+<p><span class="math display">\[cos(\theta) = \frac{\boldsymbol x \cdot \boldsymbol y}{||\boldsymbol x|| \ ||\boldsymbol y||} = \frac{\sum_{i=1}^{n}x_iy_i}{\sqrt{\sum_{i=1}^{n}x^2_i} \sqrt{\sum_{i=1}^{n}y^2_i}}\]</span></p>
+<p>Cosine similarity ranges from 0 to 1, with higher values indicating greater similarity. As two vectors become more aligned, the angle between them decreases, and the cosine similarity approaches 1, reflecting highly similar user preferences. Conversely, a larger angle results in a cosine similarity closer to 0, indicating that the preferences are very different.</p>
+</section>
+<section id="user-based-collaborative-filtering" class="level2">
+<h2 class="anchored" data-anchor-id="user-based-collaborative-filtering">User-Based Collaborative Filtering</h2>
+<p>User-Based Collaborative Filtering accounts for a user’s interests by identifying similar users and recommending items that those users have shown interest in (Grus, 2015).</p>
+<p>To get an idea of how similar two users are we need to use the cosine similarity metric, which quantifies how alike any two users are based on their preference vectors.</p>
+</section>
+<section id="item-based-collaborative-filtering" class="level2">
+<h2 class="anchored" data-anchor-id="item-based-collaborative-filtering">Item-Based Collaborative Filtering</h2>
+<p>Item-based collaborative filtering (IBCF) takes an alternative approach by computing similarities between items, rather than users. Recommendations are then generated for each user by aggregating items that are similar to the ones the user has shown interest in (Grus, 2015).</p>
+<p>Cosine similarity is again used to calculate similarity. If two items are of interest to the same users, their similarity will be closer to 1. If no users show interest in both items, their similarity will be closer to 0. Recommendations are generated by summing the similarities of items related to the user’s current interests.</p>
+</section>
+<section id="collaborative-filtering-with-matrix-factorisation" class="level2">
+<h2 class="anchored" data-anchor-id="collaborative-filtering-with-matrix-factorisation">Collaborative filtering with matrix factorisation</h2>
+<p>Matrix factorisation offers a different approach to collaborative filtering, rooted in linear algebra, where the goal is to fill in missing values within a matrix. Also known as matrix decomposition, it involves representing a matrix as the product of two smaller matrices. The key concept behind this method is the discovery of <strong>latent factors</strong> — hidden features that capture meaningful patterns in the data.</p>
+<p>In recommendation systems, matrix factorisation decomposes the user-item ratings matrix into two smaller matrices in such a way that the known ratings are closely approximated. A key advantage of this approach is that, while the original ratings matrix is incomplete (with missing entries), the decomposed matrices are fully populated. This allows for predicting the missing values in the original matrix, effectively filling in the blanks and making recommendations based on the latent factors derived from the data.</p>
+</section>
+</section>
+<section id="data-description" class="level1">
+<h1>Data description</h1>
+<p>The dataset used in this report was obtained from <a href="https://www.kaggle.com/datasets/arashnic/book-recommendation-dataset/">Kaggle’s freely available Book Recommendation Dataset</a>. The data was collected by Cai-Nicolas Ziegler in a four-week-long crawl between August and September 2004 from the <a href="https://www.bookcrossing.com/">Book-Crossing community</a> with kind permission from Ron Hornbaker, CTO of Humankind Systems. It contains 278 858 users (anonymised, but with demographic information) providing over 1 million ratings (explicit/implicit) about 271 379 books.</p>
+<p>The dataset consists of three files:</p>
+<p>1. <strong>Users:</strong> which contains the user information:</p>
+<p><code>User.ID</code>: the unique, anonymised user identifier.</p>
+<p><code>Location</code>: the location of the user (in the format of city, state, country).</p>
+<p><code>Age</code>: the age of the user.</p>
+<p>2. <strong>Books:</strong> which contains the book and content based information (which have been obtained from Amazon Web Services):</p>
+<p><code>ISBN</code>: the unique identifier for each book.</p>
+<p><code>Book.Title</code>: the book title.</p>
+<p><code>Book.Author</code>: the book author (in the case of several authors, only the first is provided).</p>
+<p><code>Year.Of.Publication</code>: the year of publication.</p>
+<p><code>Publisher</code>: the publisher of the book.</p>
+<p><code>Image-URL-S</code>, <code>Image-URL-M</code>, and <code>Image-URL-L</code>: URLs linking to cover images of the books in size small, medium and large, respectively. These URLs point to the Amazon web site.</p>
+<p>3. <strong>Ratings:</strong> which contains the book rating information:</p>
+<p><code>User.ID</code>: the unique user id of the user rating the book.</p>
+<p><code>ISBN</code>: the ISBN (identifier) of the book rated.</p>
+<p><code>Book.Rating</code>: the rating given by the user. These ratings are either explicit (expressed on a scale of 1-10 where higher values indicated higher appreciation), or implicit, expressed by 0.</p>
+</section>
+<section id="exploratory-data-analysis" class="level1">
+<h1>Exploratory data analysis</h1>
+<p>There were no duplicate entries found in any of the datasets.</p>
+<p>The <code>Books</code> dataset contains information for 271 360 books, with all of these books being unique based on their ISBN.</p>
+<p>The <code>Users</code> dataset contains information for 278 858 users, with all of these users being unique based on their user IDs.</p>
+<p>The <code>Ratings</code> dataset contains information for 1 149 780 ratings. For this dataset we found that 105 283 unique users gave ratings (both explicit and implicit), this accounts for approximately 38% of the total user base. Interestingly, these users rated 340 556 books, which exceeds the number of books listed in the <code>Books</code> dataset.</p>
+<section id="univariate-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="univariate-analysis">Univariate analysis</h2>
+<p>We decided to investigate the following variables: user age and book ratings.</p>
+<p>We chose not to explore user location or additional book details, as they were not relevant to the objectives of this recommender system exercise.</p>
+<section id="user-age" class="level3">
+<h3 class="anchored" data-anchor-id="user-age">User Age</h3>
+<p>User ages ranged from 0 to 244 years, with a mean of 35 and a median of 32. This range presents significant issues, as it’s unrealistic for users to be 0 or 244 years old. These outliers likely result from data entry errors. Excluding these extreme values reveals that the age distribution is generally symmetrical and uniform.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 34.75143</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 32</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 244</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="assignment1_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="book-ratings" class="level3">
+<h3 class="anchored" data-anchor-id="book-ratings">Book ratings</h3>
+<p>Book ratings ranged from 0 to 10. A rating of 0 indicated an implicit interaction, meaning the user may have read or interacted with the book but did not explicitly rate it. Ratings from 1 to 10 were explicit, representing direct user input. As shown in <em>Figure 2</em> below, the majority of ratings were implicit, which will be less useful for our recommender system moving forward.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2.86695</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 10</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="assignment1_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="bivariate-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="bivariate-analysis">Bivariate analysis</h2>
+<section id="ratings-by-user" class="level3">
+<h3 class="anchored" data-anchor-id="ratings-by-user">Ratings by user</h3>
+<p>We observed that one user (ID 11676) rated an impressive 13 607 books, which is significantly higher than the average of just 10 book ratings per user. When we investigated this user we noted that there is no location or age information available for them</p>
+</section>
+<section id="ratings-by-book" class="level3">
+<h3 class="anchored" data-anchor-id="ratings-by-book">Ratings by book</h3>
+<p>The most rated book was “Wild Animus” by Rich Shapero, published in 2004, which received a total of 2502 ratings.</p>
+<p>Several books had an average rating of 10, though in many cases these ratings were based on input from only a single user.</p>
+</section>
+</section>
+</section>
+<section id="methods" class="level1">
+<h1>Methods</h1>
+<section id="data-manipulation" class="level2">
+<h2 class="anchored" data-anchor-id="data-manipulation">Data manipulation</h2>
+<section id="ratings" class="level3">
+<h3 class="anchored" data-anchor-id="ratings">Ratings</h3>
+<p>We decided to drop the implicit ratings (ratings equal to 0) as these are not useful in the building of our recommender model. We also chose to only keep books with 5 or more ratings to exclude books that are rarely read.</p>
+<p>We also chose to retain user ratings only for those who had rated 10 or more books (i.e., users who rated at least the average number of books). This approach ensures that we focus on active readers, providing a more reliable understanding of their preferences. These filtering methods resulted in a ratings data frame with 111 008 rows, meaning 1 038 772 observations (~90% of our ratings data) was dropped.</p>
+</section>
+<section id="users" class="level3">
+<h3 class="anchored" data-anchor-id="users">Users</h3>
+<p>We decided to only investigate the user preferences of young adults between the ages of 18 and 25 (inclusive). All other ages were dropped from the data frame. We also decided to exclude the user location information as this was not helpful to our recommender model building.</p>
+</section>
+<section id="books" class="level3">
+<h3 class="anchored" data-anchor-id="books">Books</h3>
+<p>We ensured that all books had a title. We then investigated the instances where the Year of Publication contained non-numeric values, as this would prevent converting the column to an integer. We found that for three books, the Book Author and Year of Publication fields had been mistakenly swapped. To address this, we implemented a solution to correct the swapped information. We then turned the year of publication column into a type integer.</p>
+<p>We kept the ISBN, book title, author and year of publication information and dropped the publisher and image URLs from the <code>books</code> data frame.</p>
+</section>
+<section id="joining-of-data-frames" class="level3">
+<h3 class="anchored" data-anchor-id="joining-of-data-frames">Joining of data frames</h3>
+<p>The <code>Books</code> data frame was merged with the <code>Ratings</code> data frame using a left join on the common variable<code>ISBN</code>. This ensured that all the ratings information was retained while adding the corresponding book titles and authors to the data set.</p>
+<p>To address the earlier discrepancy where more books were rated than were listed in the <code>Books</code> data frame, we checked for any missing book titles. We found that 7 249 ratings lacked corresponding book titles or any other associated information. As a result, we opted to remove these ratings from the data frame.</p>
+<p>We then merged the user information into the new data frame using a left join, matching on the shared user IDs. The left join was chosen to ensure that all data related to the books and their ratings remained intact. We then noted that we now had 97 202 ratings without age information which had to be dropped.</p>
+<p>The final merged data frame contained the following variables: the book’s ISBN, title, author, year of publication, the user’s rating, and their age. It comprised 10 768 ratings, and the first 50 can be viewed by exploring the data table below.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-c5617a666f44ad799ab3" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-c5617a666f44ad799ab3">{"x":{"filter":"none","vertical":false,"data":[[254,254,254,254,254,254,254,254,254,254,254,254,254,254,254,254,254,254,254,254,254,254,254,254,254,254,254,254,254,254,254,254,254,254,254,254,638,638,638,638,638,638,638,638,638,638,638,638,638,638],["0060934700","0060976977","0064471047","0066238501","0142001740","0373226063","0373226144","0373834446","0373834489","037582345X","0380730448","0380789035","0380817845","0380973634","0380973650","0380977281","038097827X","0399146431","0439064864","0439064872","0439136350","0439136369","0439139597","0451167317","0451406176","0451409256","0451524934","0451526341","0553280325","0590353403","0618002219","0618002227","0671021001","0679879242","1563895730","1931081727","0060191929","0140107649","0151001006","0316603287","0316666343","0316693006","0316693200","0316769487","0316776963","0316779423","0316779490","0316789089","0316969443","0345339711"],[9,7,7,5,9,6,5,8,9,9,8,10,8,10,9,8,8,9,9,9,9,9,9,8,6,7,9,8,8,9,9,8,7,8,9,9,9,10,10,9,10,10,9,10,10,10,9,10,10,10],["Smoke and Mirrors: Short Fictions and Illusions","Amazing Grace : Lives of Children and the Conscience of a Nation, The","The Lion, the Witch, and the Wardrobe (The Chronicles of Narnia, Book 2)","Complete Chronicles of Narnia","The Secret Life of Bees","Bayou Blood Brothers: Tyler/Nick/Jules (Harlequin Intrigue 606)","Familiar Lullaby (Fear Familiar) (Harlequin Intrigue, No 614)","The Nonesuch","Corinthian","The Golden Compass (His Dark Materials, Book 1)","The Adrian Mole Diaries : The Secret Diary of Adrian Mole, Aged 13 3/4 : The Growing Pains of Adrian Mole","American Gods","Man at Work (Avon Light Contemporary Romances)","Neverwhere","American Gods: A Novel","Stardust","The Wolves in the Walls","The Bonesetter's Daughter","Harry Potter and the Chamber of Secrets (Book 2)","Harry Potter and the Chamber of Secrets (Book 2)","Harry Potter and the Prisoner of Azkaban (Book 3)","Harry Potter and the Prisoner of Azkaban (Book 3)","Harry Potter and the Goblet of Fire (Book 4)","The Dark Half","The Duke","Making Minty Malone","1984","Animal Farm","Something Wicked This Way Comes","Harry Potter and the Sorcerer's Stone (Book 1)","The Hobbit: or There and Back Again","The Fellowship of the Ring (The Lord of the Rings, Part 1)","She's Come Undone (Oprah's Book Club)","The Golden Compass (His Dark Materials, Book 1)","Sandman: The Dream Hunters","The Devil You Know","The Saving Graces : A Novel","Blue Heaven (Contemporary American Fiction S.)","Snow Falling on Cedars","The Lake House","The Lovely Bones: A Novel","Four Blind Mice","2nd Chance","The Catcher in the Rye","Me Talk Pretty One Day","Barrel Fever : Stories and Essays (Barrel Fever)","Naked","The Pilot's Wife : A Novel Tag: Author of the Weight of Water (Oprah's Book Club (Hardcover))","Suzanne's Diary for Nicholas","The Two Towers (The Lord of the Rings, Part 2)"],["Neil Gaiman","Jonathan Kozol","C. S. Lewis","C. S. Lewis","Sue Monk Kidd","Rebecca York","Caroline Burnes","Georgette Heyer","Georgette Heyer","PHILIP PULLMAN","Sue Townsend","Neil Gaiman","Elaine Fox","Neil Gaiman","Neil Gaiman","Neil Gaiman","Neil Gaiman","Amy Tan","J. K. Rowling","J. K. Rowling","J. K. Rowling","J. K. Rowling","J. K. Rowling","Stephen King","Catherine Coulter","Isabel Wolff","George Orwell","George Orwell","Ray Bradbury","J. K. Rowling","J.R.R. Tolkien","J. R. R. Tolkien","Wally Lamb","PHILIP PULLMAN","Neil Gaiman","Poppy Z. Brite","Patricia Gaffney","Joe Keenan","David Guterson","James Patterson","Alice Sebold","James Patterson","James Patterson","J.D. Salinger","David Sedaris","David Sedaris","David Sedaris","Anita Shreve","James Patterson","J.R.R. TOLKIEN"],[2001,1996,1994,2001,2003,2001,2001,2000,2000,2002,1997,2002,2002,1997,2001,1999,2003,2001,1999,2000,1999,2001,2000,1994,1995,2000,1990,2004,1983,1998,1999,1999,1998,1996,1999,2003,1999,1988,1994,2003,2002,2002,2002,1991,2001,1995,1997,1999,2001,1986],[24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,24,20,20,20,20,20,20,20,20,20,20,20,20,20,20]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>User.ID<\/th>\n      <th>ISBN<\/th>\n      <th>Book.Rating<\/th>\n      <th>Book.Title<\/th>\n      <th>Book.Author<\/th>\n      <th>Year.Of.Publication<\/th>\n      <th>Age<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"tip","pageLength":5,"columnDefs":[{"className":"dt-right","targets":[0,2,5,6]},{"name":"User.ID","targets":0},{"name":"ISBN","targets":1},{"name":"Book.Rating","targets":2},{"name":"Book.Title","targets":3},{"name":"Book.Author","targets":4},{"name":"Year.Of.Publication","targets":5},{"name":"Age","targets":6}],"order":[],"autoWidth":false,"orderClasses":false,"lengthMenu":[5,10,25,50,100]}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</section>
+</section>
+<section id="collaborative-filtering-with-matrix-factorisation-1" class="level2">
+<h2 class="anchored" data-anchor-id="collaborative-filtering-with-matrix-factorisation-1">Collaborative filtering with matrix factorisation</h2>
+<p>Matrix factorisation was implemented using the <code>recosystem</code> package. To prepare the data in the required format, we structured the ratings dataset so that each row represented a unique rating, with columns for the user ID, book ISBN, book title, and rating score. It was necessary to convert both the user IDs and book ISBNs into factors, as the matrix factorisation model in <code>recosystem</code> relies on categorical encoding of users and items. This step ensured that the model could properly identify and differentiate between users and books.</p>
+<p>After preparing the data, we initialised a matrix factorisation model using the <code>recosystem</code> package by creating an instance of the Reco() object. This object serves as the model that will be trained on our data to learn user-item interactions.</p>
+<p>Next, we split the data into training and test sets to evaluate the model’s performance. We used an 80/20 split, where 80% of the data was randomly selected for training and the remaining 20% was used for testing. To ensure reproducibility (so that the same random split can be generated each time the code is run), we set a random seed.</p>
+<p>To use the <code>recosystem</code> package for matrix factorisation, we need to convert the training and testing data into a format that the package can process. This is done by using the <code>data_memory()</code> function, which transforms the data into memory-efficient objects that <code>recosystem</code> can work with.</p>
+<p><strong>For the training data:</strong></p>
+<ul>
+<li><p>We specify the <code>user_index</code> (the user ID), <code>item_index</code> (the ISBN for each book), and the rating (the actual rating given by the user).</p></li>
+<li><p>This creates a memory-based data object that links users, books, and ratings, which will be used to train the model.</p></li>
+</ul>
+<p><strong>For the testing data:</strong></p>
+<ul>
+<li>A similar process is applied, but with the test set. The <code>user_index</code> and <code>item_index</code> are specified along with the rating, allowing us to evaluate the model’s performance on unseen data.</li>
+</ul>
+<p>We then performed collaborative filtering with matrix factorisation both with and without a regularisation term.</p>
+<section id="without-regularisation-term" class="level3">
+<h3 class="anchored" data-anchor-id="without-regularisation-term">Without regularisation term</h3>
+<p>The matrix factorisation model is trained on the training set using the <code>train()</code> function from the <code>recosystem</code> package. Without specifying a regularisation term, the model relies purely on learning latent factors for users and items without penalising large or complex factor values. This can lead to overfitting, especially with sparse data, because the model may fit the training data too closely, capturing noise rather than generalisable patterns.</p>
+<p>After the training phase, predictions were made on the test set using the <code>predict()</code> function. The predicted ratings were stored for later evaluation. Since there was no regularisation, the model might perform well on the training set but could struggle to generalise to new, unseen data in the test set, potentially leading to poorer predictive accuracy.</p>
+</section>
+<section id="with-regularisation-term" class="level3">
+<h3 class="anchored" data-anchor-id="with-regularisation-term">With regularisation term</h3>
+<p>To enhance the performance of matrix factorisation in collaborative filtering, we introduced L2 regularisation. L2 regularisation adds a penalty term to the loss function, discouraging large parameter values. This helps prevent overfitting, especially in sparse datasets, which is common in recommendation systems. In the <code>recosystem</code> package, L2 regularisation is applied to both user and item latent factors by setting <code>costp_l2</code> and <code>costq_l2</code> during model training. These parameters control the strength of regularisation for the user and item factors, respectively.</p>
+<p>We conducted a grid search to find the optimal combination of <code>costp_l2</code> and <code>costq_l2</code> values that would yield the lowest RMSE score for our predictions.</p>
+<p>The following values were tested:</p>
+<ul>
+<li><p><code>costp_l2</code>: 0.001, 0.01, 0.1, 0.5, 0.6, 0.8, 1</p></li>
+<li><p><code>costq_l2</code>: 0.001, 0.01, 0.1, 0.5, 0.6, 0.8, 1</p></li>
+</ul>
+<p>This approach allowed us to identify the best regularisation settings to improve prediction accuracy and prevent overfitting.</p>
+<p>The best combination of hyperparameters were a <code>costp_l2</code> of 0.5 and a <code>costq_l2</code> of 0.01, which resulted in a RMSE of ~1.83.</p>
+<p>This combination was selected for the final model with L2 regularisation to generate predictions.</p>
+</section>
+</section>
+<section id="user-based-collaborative-filtering-1" class="level2">
+<h2 class="anchored" data-anchor-id="user-based-collaborative-filtering-1">User-Based Collaborative Filtering</h2>
+<p>To calculate user similarities, we first converted our ratings matrix into a wide format, where each row represented a user (User.ID) and each column represented a book (ISBN).</p>
+<p>Recognising that users have different rating habits, with some users rating consistently higher or lower than others, we applied mean-centering to standardise the data. Without this normalisation, users with similar preferences might appear dissimilar due to these differences in rating styles. By using mean-centering, we adjusted the ratings to reflect how much a user liked or disliked a book <strong>relative to their own average</strong>. This prepared the data for computing the users’ cosine similarity, ensuring that it captured users’ true preferences and enabled more accurate recommendations.</p>
+<p>We replaced any <code>NA</code> values, representing missing ratings for a given book, with zero. This step was necessary because cosine similarity cannot handle missing values. The matrix was then converted into a sparse format, which is more computationally efficient when working with matrices that contain a large number of zero values.</p>
+<p>Finally, we calculated cosine similarities between users based on their book ratings using the <code>simil()</code> function from the <code>proxyC</code> package, which is well-suited for efficiently handling sparse matrices. The user similarities sparse matrix was converted to a dense matrix, to allow for easy computation and predictions later.</p>
+<section id="predictions" class="level3">
+<h3 class="anchored" data-anchor-id="predictions">Predictions</h3>
+<p>To assess the UB collaborative filtering model’s predictions, we chose to make predictions on the same test set used in the collaborative filtering model with matrix factorisation. We created a function to calculate the user-based predicted rating, while adjusting for each user’s average rating.</p>
+<p>In the function, we first retrieve the cosine similarity scores for the target user and standardise them so they sum to one, but only across users who have rated the specific book. The predicted rating for the book is then calculated as a weighted sum of the ratings given by other users, with the weights being the standardised similarity scores. Finally, the predicted rating is adjusted by adding the user’s average rating to bring it back to the original scale.</p>
+<p>This approach ensured that both user similarities and individual rating tendencies are considered when making predictions.</p>
+<p>We then applied the function across the same test used in the collaborative filtering with matrix factorisation model.</p>
+</section>
+</section>
+<section id="item-based-collaborative-filtering-1" class="level2">
+<h2 class="anchored" data-anchor-id="item-based-collaborative-filtering-1">Item-Based Collaborative Filtering</h2>
+<p>To calculate item similarities, we first converted our ratings matrix into a wide format, where each row represented a book (ISBN) and each column represented a user (User.ID).</p>
+<p>Recognising that books may receive different ratings from various users, we applied mean-centering to standardise the data. Without this normalisation, books with similar popularity might appear dissimilar due to differences in user rating styles. By using mean-centering, we adjusted the ratings to reflect how well a book was rated relative to its average rating across users. This prepared the data for computing the items’ cosine similarity, ensuring that it captured each book’s true popularity and enabled more accurate recommendations.</p>
+<p>We replaced any NA values, representing missing ratings for a given user, with zero. This step was necessary because cosine similarity cannot handle missing values. The matrix was then converted into a sparse format, which is more computationally efficient when working with matrices that contain a large number of zero values.</p>
+<p>Finally, we calculated cosine similarities between books based on their ratings from users using the simil() function from the proxyC package, which is well-suited for efficiently handling sparse matrices. The item similarities sparse matrix was converted to a dense matrix to allow for easier computation and predictions later.</p>
+<section id="predictions-1" class="level3">
+<h3 class="anchored" data-anchor-id="predictions-1">Predictions</h3>
+<p>To assess the IB collaborative filtering model’s predictions, we chose to make predictions on the same test set used in the collaborative filtering model with matrix factorisation. We created a function to calculate the user-based predicted rating, while adjusting for each user’s average rating.</p>
+<p>In the function, we first retrieve the cosine similarity scores for the target user and standardise them so they sum to one, but only across users who have rated the specific book. The predicted rating for the book is then calculated as a weighted sum of the ratings given by other users, with the weights being the standardised similarity scores. Finally, the predicted rating is adjusted by adding the user’s average rating to bring it back to the original scale.</p>
+<p>This approach ensured that both user similarities and individual rating tendencies are considered when making predictions.</p>
+<p>We then applied the function across the same test used in the collaborative filtering with matrix factorisation model.</p>
+</section>
+</section>
+<section id="ensemble-model" class="level2">
+<h2 class="anchored" data-anchor-id="ensemble-model">Ensemble model</h2>
+<p>As our last model we built an ensemble model which averages the predictions from the user-based, item-based and the matrix factorisation model (with regularisation) on the condition that the predictions are only considered if they fall within the range of 1 and 10 (inclusive), i.e.&nbsp;the predictions are valid. .</p>
+</section>
+</section>
+<section id="results" class="level1">
+<h1>Results</h1>
+<section id="accuracy-assessment" class="level2">
+<h2 class="anchored" data-anchor-id="accuracy-assessment">Accuracy assessment</h2>
+<section id="collaborative-filtering-with-matrix-factorisation-model---without-regularisation-term" class="level3">
+<h3 class="anchored" data-anchor-id="collaborative-filtering-with-matrix-factorisation-model---without-regularisation-term">Collaborative filtering with matrix factorisation model - Without regularisation term</h3>
+</section>
+<section id="collaborative-filtering-with-matrix-factorisation-model---with-regularisation-term" class="level3">
+<h3 class="anchored" data-anchor-id="collaborative-filtering-with-matrix-factorisation-model---with-regularisation-term">Collaborative filtering with matrix factorisation model - With regularisation term</h3>
+</section>
+<section id="user-based-collaborative-filtering-2" class="level3">
+<h3 class="anchored" data-anchor-id="user-based-collaborative-filtering-2">User-Based Collaborative filtering</h3>
+</section>
+<section id="item-based-collaborative-filtering-2" class="level3">
+<h3 class="anchored" data-anchor-id="item-based-collaborative-filtering-2">Item-Based Collaborative filtering</h3>
+</section>
+<section id="ensemble-model-1" class="level3">
+<h3 class="anchored" data-anchor-id="ensemble-model-1">Ensemble model</h3>
+</section>
+</section>
+</section>
+<section id="discussion" class="level1">
+<h1>Discussion</h1>
+</section>
+<section id="recommendations" class="level1">
+<h1>Recommendations</h1>
+</section>
+<section id="conclusion" class="level1">
+<h1>Conclusion</h1>
+</section>
+<section id="references" class="level1">
+<h1>References</h1>
+<p>Grus, J. (2015). Data Science from Scratch: First Principles with Python. 1st ed.&nbsp;O’Reilly Media.</p>
+<p>Han, J., Kamber, M. &amp; Pei, J. (2012). Data Mining: Concepts and Techniques, Morgan Kaufmann Publishers, San Francisco, CA, USA.</p>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
